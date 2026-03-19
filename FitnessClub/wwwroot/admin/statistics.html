@@ -1,0 +1,574 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Статистика и отчёты - Админ-панель</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.min.css">
+    <style>
+        .statistics-header {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: white;
+            padding: 30px 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .stats-period {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .period-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .chart-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 20px;
+        }
+
+        .stats-summary {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .summary-item {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .summary-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1a2980;
+            margin: 10px 0;
+        }
+
+        .summary-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .reports-section {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .report-card {
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            transition: border-color 0.3s;
+        }
+
+            .report-card:hover {
+                border-color: #26d0ce;
+            }
+
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .period-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .chart-container {
+                height: 250px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-container {
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-dumbbell"></i>
+                <span>Фитнес-клуб "Сила" - Админ</span>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="/" class="nav-link"><i class="fas fa-home"></i> Главная</a>
+                <a href="/admin/dashboard.html" class="nav-link"><i class="fas fa-tachometer-alt"></i> Дашборд</a>
+                <a href="/admin/clients.html" class="nav-link"><i class="fas fa-users"></i> Клиенты</a>
+                <a href="/admin/attendance.html" class="nav-link"><i class="fas fa-calendar-check"></i> Посещения</a>
+                <a href="/admin/statistics.html" class="nav-link active"><i class="fas fa-chart-bar"></i> Статистика</a>
+                <a href="#" class="nav-link" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+            </div>
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="statistics-header">
+            <h1>Статистика и отчёты</h1>
+            <p>Аналитика и отчёты по работе фитнес-клуба</p>
+        </div>
+
+        <div class="stats-period">
+            <h3><i class="fas fa-calendar-alt"></i> Выбор периода</h3>
+            <div class="period-controls">
+                <select id="periodSelect" class="form-control" style="min-width: 200px;" onchange="changePeriod()">
+                    <option value="today">Сегодня</option>
+                    <option value="yesterday">Вчера</option>
+                    <option value="week" selected>Эта неделя</option>
+                    <option value="month">Этот месяц</option>
+                    <option value="quarter">Этот квартал</option>
+                    <option value="year">Этот год</option>
+                    <option value="custom">Произвольный период</option>
+                </select>
+
+                <div id="customPeriod" style="display: none;">
+                    <input type="date" id="customFrom" class="form-control">
+                    <span style="margin: 0 10px;">по</span>
+                    <input type="date" id="customTo" class="form-control">
+                </div>
+
+                <button onclick="loadStatistics()" class="btn btn-primary">
+                    <i class="fas fa-chart-line"></i> Обновить статистику
+                </button>
+                <button onclick="exportToExcel()" class="btn btn-success">
+                    <i class="fas fa-file-excel"></i> Экспорт в Excel
+                </button>
+            </div>
+        </div>
+
+        <div class="stats-summary">
+            <h3><i class="fas fa-chart-pie"></i> Общая статистика</h3>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <div class="summary-value" id="totalRevenue">0 ₽</div>
+                    <div class="summary-label">Общий доход</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-value" id="totalVisits">0</div>
+                    <div class="summary-label">Всего посещений</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-value" id="avgDailyVisits">0</div>
+                    <div class="summary-label">Среднее в день</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-value" id="activeClients">0</div>
+                    <div class="summary-label">Активных клиентов</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h4><i class="fas fa-chart-line"></i> Посещаемость по дням</h4>
+                <div class="chart-container">
+                    <canvas id="attendanceChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h4><i class="fas fa-chart-pie"></i> Распределение абонементов</h4>
+                <div class="chart-container">
+                    <canvas id="membershipChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h4><i class="fas fa-money-bill-wave"></i> Доход по месяцам</h4>
+                <div class="chart-container">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h4><i class="fas fa-users"></i> Активность клиентов</h4>
+                <div class="chart-container">
+                    <canvas id="clientsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="reports-section">
+            <h3><i class="fas fa-file-alt"></i> Готовые отчёты</h3>
+            <div class="reports-grid">
+                <div class="report-card">
+                    <h5><i class="fas fa-calendar-check"></i> Отчёт по посещениям</h5>
+                    <p>Детальный отчёт по посещаемости за период с анализом пиковых часов</p>
+                    <div class="export-buttons">
+                        <button onclick="generateAttendanceReport()" class="btn btn-sm btn-primary">
+                            <i class="fas fa-eye"></i> Просмотреть
+                        </button>
+                        <button onclick="exportAttendanceReport()" class="btn btn-sm btn-success">
+                            <i class="fas fa-download"></i> Скачать PDF
+                        </button>
+                    </div>
+                </div>
+
+                <div class="report-card">
+                    <h5><i class="fas fa-money-bill"></i> Финансовый отчёт</h5>
+                    <p>Отчёт по доходам, продажам абонементов и финансовым показателям</p>
+                    <div class="export-buttons">
+                        <button onclick="generateFinancialReport()" class="btn btn-sm btn-primary">
+                            <i class="fas fa-eye"></i> Просмотреть
+                        </button>
+                        <button onclick="exportFinancialReport()" class="btn btn-sm btn-success">
+                            <i class="fas fa-download"></i> Скачать Excel
+                        </button>
+                    </div>
+                </div>
+
+                <div class="report-card">
+                    <h5><i class="fas fa-user-check"></i> Отчёт по клиентам</h5>
+                    <p>Анализ клиентской базы, активности и удержания клиентов</p>
+                    <div class="export-buttons">
+                        <button onclick="generateClientsReport()" class="btn btn-sm btn-primary">
+                            <i class="fas fa-eye"></i> Просмотреть
+                        </button>
+                        <button onclick="exportClientsReport()" class="btn btn-sm btn-success">
+                            <i class="fas fa-download"></i> Скачать CSV
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>Фитнес-клуб "Сила" &copy; 2026. Статистика и аналитика.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="/js/utils.js"></script>
+    <script src="/js/admin.js"></script>
+    <script>
+        let attendanceChart, membershipChart, revenueChart, clientsChart;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Установка дат по умолчанию
+            const today = new Date();
+            const weekAgo = new Date();
+            weekAgo.setDate(today.getDate() - 7);
+
+            document.getElementById('customFrom').value = weekAgo.toISOString().split('T')[0];
+            document.getElementById('customTo').value = today.toISOString().split('T')[0];
+
+            // Загрузка статистики
+            loadStatistics();
+
+            // Обработка изменения периода
+            document.getElementById('periodSelect').addEventListener('change', function() {
+                const customPeriod = document.getElementById('customPeriod');
+                customPeriod.style.display = this.value === 'custom' ? 'flex' : 'none';
+            });
+        });
+
+        async function loadStatistics() {
+            try {
+                const period = document.getElementById('periodSelect').value;
+                let from, to;
+
+                if (period === 'custom') {
+                    from = document.getElementById('customFrom').value;
+                    to = document.getElementById('customTo').value;
+                } else {
+                    const dates = getPeriodDates(period);
+                    from = dates.from;
+                    to = dates.to;
+                }
+
+                // Загрузка данных статистики
+                const response = await api.get(`/api/admin/statistics-detailed?from=${from}&to=${to}`);
+
+                // Обновление общей статистики
+                document.getElementById('totalRevenue').textContent = formatCurrency(response.totalRevenue || 0);
+                document.getElementById('totalVisits').textContent = response.totalVisits || 0;
+                document.getElementById('avgDailyVisits').textContent = response.avgDailyVisits?.toFixed(1) || 0;
+                document.getElementById('activeClients').textContent = response.activeClients || 0;
+
+                // Обновление графиков
+                updateCharts(response);
+
+                showAlert('Статистика загружена', 'success');
+
+            } catch (error) {
+                console.error('Ошибка загрузки статистики:', error);
+                showAlert('Не удалось загрузить статистику', 'error');
+            }
+        }
+
+        function updateCharts(data) {
+            // График посещаемости
+            if (attendanceChart) attendanceChart.destroy();
+            const attendanceCtx = document.getElementById('attendanceChart').getContext('2d');
+            attendanceChart = new Chart(attendanceCtx, {
+                type: 'line',
+                data: {
+                    labels: data.attendanceLabels || [],
+                    datasets: [{
+                        label: 'Посещений',
+                        data: data.attendanceData || [],
+                        borderColor: '#1a2980',
+                        backgroundColor: 'rgba(26, 41, 128, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+
+            // График абонементов
+            if (membershipChart) membershipChart.destroy();
+            const membershipCtx = document.getElementById('membershipChart').getContext('2d');
+            membershipChart = new Chart(membershipCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: data.membershipLabels || [],
+                    datasets: [{
+                        data: data.membershipData || [],
+                        backgroundColor: [
+                            '#1a2980',
+                            '#26d0ce',
+                            '#4CAF50',
+                            '#FF9800',
+                            '#9C27B0'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        }
+                    }
+                }
+            });
+
+            // График доходов
+            if (revenueChart) revenueChart.destroy();
+            const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+            revenueChart = new Chart(revenueCtx, {
+                type: 'bar',
+                data: {
+                    labels: data.revenueLabels || [],
+                    datasets: [{
+                        label: 'Доход (₽)',
+                        data: data.revenueData || [],
+                        backgroundColor: '#4CAF50',
+                        borderColor: '#2E7D32',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return formatCurrency(value);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // График клиентов
+            if (clientsChart) clientsChart.destroy();
+            const clientsCtx = document.getElementById('clientsChart').getContext('2d');
+            clientsChart = new Chart(clientsCtx, {
+                type: 'line',
+                data: {
+                    labels: data.clientsLabels || [],
+                    datasets: [{
+                        label: 'Новые клиенты',
+                        data: data.newClientsData || [],
+                        borderColor: '#FF9800',
+                        backgroundColor: 'rgba(255, 152, 0, 0.1)',
+                        borderWidth: 2,
+                        fill: true
+                    }, {
+                        label: 'Активные клиенты',
+                        data: data.activeClientsData || [],
+                        borderColor: '#1a2980',
+                        backgroundColor: 'rgba(26, 41, 128, 0.1)',
+                        borderWidth: 2,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function getPeriodDates(period) {
+            const today = new Date();
+            let from, to;
+
+            switch(period) {
+                case 'today':
+                    from = to = today.toISOString().split('T')[0];
+                    break;
+                case 'yesterday':
+                    const yesterday = new Date(today);
+                    yesterday.setDate(yesterday.getDate() - 1);
+                    from = to = yesterday.toISOString().split('T')[0];
+                    break;
+                case 'week':
+                    from = new Date(today);
+                    from.setDate(from.getDate() - 7);
+                    to = today.toISOString().split('T')[0];
+                    from = from.toISOString().split('T')[0];
+                    break;
+                case 'month':
+                    from = new Date(today.getFullYear(), today.getMonth(), 1);
+                    to = today.toISOString().split('T')[0];
+                    from = from.toISOString().split('T')[0];
+                    break;
+                case 'quarter':
+                    const quarter = Math.floor(today.getMonth() / 3);
+                    from = new Date(today.getFullYear(), quarter * 3, 1);
+                    to = today.toISOString().split('T')[0];
+                    from = from.toISOString().split('T')[0];
+                    break;
+                case 'year':
+                    from = new Date(today.getFullYear(), 0, 1);
+                    to = today.toISOString().split('T')[0];
+                    from = from.toISOString().split('T')[0];
+                    break;
+                default:
+                    from = to = today.toISOString().split('T')[0];
+            }
+
+            return { from, to };
+        }
+
+        function changePeriod() {
+            const period = document.getElementById('periodSelect').value;
+            if (period !== 'custom') {
+                loadStatistics();
+            }
+        }
+
+        function exportToExcel() {
+            showAlert('Функция экспорта в Excel будет реализована в следующей версии', 'info');
+        }
+
+        function generateAttendanceReport() {
+            showAlert('Отчёт по посещениям формируется...', 'info');
+            // Реализация генерации отчёта
+        }
+
+        function exportAttendanceReport() {
+            showAlert('Экспорт отчёта в PDF будет реализован в следующей версии', 'info');
+        }
+
+        function generateFinancialReport() {
+            showAlert('Финансовый отчёт формируется...', 'info');
+        }
+
+        function exportFinancialReport() {
+            showAlert('Экспорт финансового отчёта будет реализован в следующей версии', 'info');
+        }
+
+        function generateClientsReport() {
+            showAlert('Отчёт по клиентам формируется...', 'info');
+        }
+
+        function exportClientsReport() {
+            showAlert('Экспорт отчёта по клиентам будет реализован в следующей версии', 'info');
+        }
+    </script>
+</body>
+</html>

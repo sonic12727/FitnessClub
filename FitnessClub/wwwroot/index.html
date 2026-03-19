@@ -1,0 +1,158 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Фитнес-клуб "Сила"</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-dumbbell"></i>
+                <span>Фитнес-клуб "Сила"</span>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="/" class="nav-link active"><i class="fas fa-home"></i> Главная</a>
+                <a href="/login.html" class="nav-link" id="loginLink"><i class="fas fa-sign-in-alt"></i> Войти</a>
+                <a href="/register.html" class="nav-link" id="registerLink"><i class="fas fa-user-plus"></i> Регистрация</a>
+                <a href="/admin/dashboard.html" class="nav-link" id="adminLink" style="display:none"><i class="fas fa-cog"></i> Админ-панель</a>
+                <a href="/client/profile.html" class="nav-link" id="clientLink" style="display:none"><i class="fas fa-user"></i> Личный кабинет</a>
+                <a href="#" class="nav-link" id="logoutLink" style="display:none"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+            </div>
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Добро пожаловать в фитнес-клуб "Сила"</h1>
+            <p>Современное оборудование, профессиональные тренеры и комфортная атмосфера</p>
+            <div class="hero-buttons">
+                <a href="/login.html" class="btn btn-primary">Войти в систему</a>
+                <a href="#features" class="btn btn-secondary">Узнать больше</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section id="features" class="features">
+            <h2>Наши возможности</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <h3>Управление клиентами</h3>
+                    <p>Администраторы могут создавать клиентов, управлять абонементами и отмечать посещения</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h3>Контроль посещений</h3>
+                    <p>Система отслеживания посещений с проверкой действительности абонементов</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Статистика и отчёты</h3>
+                    <p>Детальная статистика по посещаемости, доходам и активности клуба</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-id-card"></i>
+                    </div>
+                    <h3>Личный кабинет</h3>
+                    <p>Клиенты могут просматривать свой абонемент и историю посещений</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="system-status">
+            <h2>Статус системы</h2>
+            <div id="systemStatus" class="status-loading">
+                <p>Проверка подключения к серверу...</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>Фитнес-клуб "Сила" &copy; 2026. Система управления клубом.</p>
+        <p class="footer-info">Для доступа к админ-панели войдите как администратор</p>
+    </footer>
+
+    <script src="/js/utils.js"></script>
+    <script src="/js/auth.js"></script>
+    <script>
+        // Проверка статуса системы
+        async function checkSystemStatus() {
+            try {
+                const response = await fetch('/api/test');
+                const data = await response.json();
+
+                document.getElementById('systemStatus').innerHTML = `
+                        <div class="status-success">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <strong>Система работает</strong>
+                                <p>Время сервера: ${data.time}, Дата: ${data.date}</p>
+                            </div>
+                        </div>
+                    `;
+            } catch (error) {
+                document.getElementById('systemStatus').innerHTML = `
+                        <div class="status-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <div>
+                                <strong>Ошибка подключения</strong>
+                                <p>Не удалось соединиться с сервером</p>
+                            </div>
+                        </div>
+                    `;
+            }
+        }
+
+        // Проверка авторизации
+        function updateNavigation() {
+            const token = localStorage.getItem('token');
+            const role = localStorage.getItem('role');
+
+            if (token && role) {
+                document.getElementById('loginLink').style.display = 'none';
+                document.getElementById('registerLink').style.display = 'none';
+                document.getElementById('logoutLink').style.display = 'block';
+
+                if (role === 'Admin') {
+                    document.getElementById('adminLink').style.display = 'block';
+                } else {
+                    document.getElementById('clientLink').style.display = 'block';
+                }
+            }
+        }
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', () => {
+            checkSystemStatus();
+            updateNavigation();
+
+            // Мобильное меню
+            document.getElementById('navToggle').addEventListener('click', () => {
+                document.getElementById('navLinks').classList.toggle('show');
+            });
+
+            // Выход
+            document.getElementById('logoutLink').addEventListener('click', (e) => {
+                e.preventDefault();
+                localStorage.clear();
+                window.location.href = '/';
+            });
+        });
+    </script>
+</body>
+</html>

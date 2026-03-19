@@ -1,0 +1,33 @@
+# Папки с зависимостями
+bin/
+obj/
+packages/
+
+# Конфигурация (не пуши настройки БД!)
+appsettings.Development.json
+appsettings.Production.json
+
+# Логи
+logs/
+*.log
+
+# Временные файлы
+.vs/
+*.user
+*.suo
+
+# Базы данных (если есть)
+*.db
+*.mdf
+*.ldf
+
+# Секретные ключи (никогда!)
+*.key
+secrets.json
+
+# VS Code
+.vscode/
+
+# Прочее
+.DS_Store
+Thumbs.db

@@ -1,0 +1,394 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель - Дашборд</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .dashboard-header {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: white;
+            padding: 30px 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+            }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1a2980;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+        }
+
+        .content-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+            .content-card h3 {
+                color: #1a2980;
+                margin-bottom: 20px;
+                padding-bottom: 10px;
+                border-bottom: 2px solid #f0f0f0;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn-admin {
+            padding: 15px;
+            text-align: center;
+            border-radius: 8px;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            transition: transform 0.3s;
+        }
+
+            .btn-admin:hover {
+                transform: translateY(-3px);
+            }
+
+            .btn-admin i {
+                font-size: 1.5rem;
+            }
+
+        .admin-menu {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .menu-link {
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+            color: white;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+            .menu-link:hover {
+                background: rgba(255,255,255,0.2);
+            }
+
+            .menu-link.active {
+                background: rgba(255,255,255,0.3);
+            }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-content {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .admin-menu {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-dumbbell"></i>
+                <span>Фитнес-клуб "Сила" - Админ</span>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="/" class="nav-link"><i class="fas fa-home"></i> Главная</a>
+                <a href="/admin/dashboard.html" class="nav-link active"><i class="fas fa-tachometer-alt"></i> Дашборд</a>
+                <a href="/admin/clients.html" class="nav-link"><i class="fas fa-users"></i> Клиенты</a>
+                <a href="/admin/attendance.html" class="nav-link"><i class="fas fa-calendar-check"></i> Посещения</a>
+                <a href="/admin/statistics.html" class="nav-link"><i class="fas fa-chart-bar"></i> Статистика</a>
+                <a href="#" class="nav-link" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+            </div>
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="dashboard-header">
+            <h1>Админ-панель</h1>
+            <p>Управление фитнес-клубом "Сила"</p>
+            <div class="admin-menu">
+                <a href="/admin/dashboard.html" class="menu-link active"><i class="fas fa-tachometer-alt"></i> Дашборд</a>
+                <a href="/admin/clients.html" class="menu-link"><i class="fas fa-users"></i> Клиенты</a>
+                <a href="/admin/attendance.html" class="menu-link"><i class="fas fa-calendar-check"></i> Посещения</a>
+                <a href="/admin/statistics.html" class="menu-link"><i class="fas fa-chart-bar"></i> Статистика</a>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon" style="color: #1a2980;">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-number" id="totalClients">0</div>
+                <div class="stat-label">Всего клиентов</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="color: #26d0ce;">
+                    <i class="fas fa-id-card"></i>
+                </div>
+                <div class="stat-number" id="activeMemberships">0</div>
+                <div class="stat-label">Активных абонементов</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="color: #4CAF50;">
+                    <i class="fas fa-sign-in-alt"></i>
+                </div>
+                <div class="stat-number" id="todayVisits">0</div>
+                <div class="stat-label">Посещений сегодня</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="color: #FF9800;">
+                    <i class="fas fa-ruble-sign"></i>
+                </div>
+                <div class="stat-number" id="monthlyRevenue">0 ₽</div>
+                <div class="stat-label">Доход за месяц</div>
+            </div>
+        </div>
+
+        <div class="dashboard-content">
+            <div class="content-card">
+                <h3><i class="fas fa-bolt"></i> Быстрые действия</h3>
+                <div class="quick-actions">
+                    <button id="createClientBtn" class="btn-admin" style="background: #1a2980; color: white;">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Добавить клиента</span>
+                    </button>
+                    <a href="/admin/clients.html" class="btn-admin" style="background: #26d0ce; color: white;">
+                        <i class="fas fa-search"></i>
+                        <span>Найти клиента</span>
+                    </a>
+                    <a href="/admin/attendance.html" class="btn-admin" style="background: #4CAF50; color: white;">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Отметить посещение</span>
+                    </a>
+                    <a href="/admin/statistics.html" class="btn-admin" style="background: #FF9800; color: white;">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Просмотр статистики</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3><i class="fas fa-users"></i> Последние клиенты</h3>
+                <div style="overflow-x: auto;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Имя</th>
+                                <th>Email</th>
+                                <th>Телефон</th>
+                                <th>Статус</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentClients">
+                            <tr>
+                                <td colspan="5" class="text-center">Загрузка клиентов...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3><i class="fas fa-calendar-day"></i> Посещения сегодня</h3>
+                <div style="overflow-x: auto;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Клиент</th>
+                                <th>Время</th>
+                                <th>Отметил</th>
+                            </tr>
+                        </thead>
+                        <tbody id="todayVisitsList">
+                            <tr>
+                                <td colspan="3" class="text-center">Загрузка посещений...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3><i class="fas fa-info-circle"></i> Системная информация</h3>
+                <div class="system-info">
+                    <p><strong>Версия системы:</strong> 1.0.0</p>
+                    <p><strong>Дата сервера:</strong> <span id="serverDate">Загрузка...</span></p>
+                    <p><strong>Статус базы данных:</strong> <span class="status-active">● Активна</span></p>
+                    <p><strong>Последнее обновление:</strong> <span id="lastUpdate">Только что</span></p>
+                </div>
+                <button onclick="refreshDashboard()" class="btn btn-secondary" style="margin-top: 20px;">
+                    <i class="fas fa-sync-alt"></i> Обновить данные
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Модальное окно создания клиента -->
+    <div id="createClientModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>Создание нового клиента</h3>
+            <form id="createClientForm">
+                <div class="form-group">
+                    <label>Email *</label>
+                    <input type="email" id="newClientEmail" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Пароль *</label>
+                    <input type="password" id="newClientPassword" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Имя *</label>
+                    <input type="text" id="newClientFirstName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Фамилия *</label>
+                    <input type="text" id="newClientLastName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Телефон</label>
+                    <input type="tel" id="newClientPhone" class="form-control">
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" onclick="createClient()" class="btn btn-primary">Создать клиента</button>
+                    <button type="button" onclick="closeModal('createClientModal')" class="btn btn-secondary">Отмена</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Фитнес-клуб "Сила" &copy; 2026. Административная панель.</p>
+        <p class="footer-info">Только для авторизованных администраторов</p>
+    </footer>
+
+    <script src="/js/utils.js"></script>
+    <script src="/js/admin.js"></script>
+    <script>
+        function refreshDashboard() {
+            loadDashboardStats();
+            loadRecentClients();
+            loadTodayVisits();
+            showAlert('Данные обновлены', 'success');
+        }
+
+        // Инициализация серверной даты
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('serverDate').textContent = new Date().toLocaleDateString('ru-RU');
+        });
+    </script>
+</body>
+</html>

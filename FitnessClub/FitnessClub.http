@@ -1,0 +1,37 @@
+@FitnessClub_HostAddress = http://localhost:5072
+
+### 1. Тест сервера (уже есть)
+GET {{FitnessClub_HostAddress}}/weatherforecast/
+Accept: application/json
+
+### 2. Тест нашего контроллера (добавь этот блок)
+GET {{FitnessClub_HostAddress}}/api/test
+Accept: application/json
+
+### 3. РЕГИСТРАЦИЯ АДМИНА (выполни ПЕРВЫМ!)
+POST {{FitnessClub_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "admin@fitness.ru",
+  "password": "admin123",
+  "firstName": "Админ",
+  "lastName": "Системный",
+  "phone": "+79991112233",
+  "role": "Admin"
+}
+
+### 4. РЕГИСТРАЦИЯ КЛИЕНТА
+POST {{FitnessClub_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "client@mail.ru",
+  "password": "client123",
+  "firstName": "Иван",
+  "lastName": "Иванов",
+  "phone": "+79992223344",
+  "role": "Client"
+}
+
+###
