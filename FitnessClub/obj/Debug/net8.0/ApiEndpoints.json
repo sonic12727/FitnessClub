@@ -1,24 +1,8 @@
 [
   {
-    "ContainingType": "FitnessClub.Controllers.AdminController",
-    "Method": "AddMembership",
-    "RelativePath": "api/Admin/add-membership",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "request",
-        "Type": "FitnessClub.Controllers.AddMembershipRequest",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "FitnessClub.Controllers.AdminController",
+    "ContainingType": "FitnessClub.Controllers.AdminAttendanceController",
     "Method": "GetAttendanceHistory",
-    "RelativePath": "api/Admin/attendance-history",
+    "RelativePath": "api/admin/attendance/history",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -37,104 +21,25 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "FitnessClub.Controllers.AdminController",
-    "Method": "GetClientDetails",
-    "RelativePath": "api/Admin/client-details/{id}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "FitnessClub.Controllers.AdminController",
-    "Method": "CreateClient",
-    "RelativePath": "api/Admin/create-client",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "request",
-        "Type": "FitnessClub.Controllers.CreateClientRequest",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "FitnessClub.Controllers.AdminController",
+    "ContainingType": "FitnessClub.Controllers.AdminAttendanceController",
     "Method": "MarkAttendance",
-    "RelativePath": "api/Admin/mark-attendance",
+    "RelativePath": "api/admin/attendance/mark",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "request",
-        "Type": "FitnessClub.Controllers.MarkAttendanceRequest",
+        "Type": "FitnessClub.Core.Requests.MarkAttendanceRequest",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "FitnessClub.Controllers.AdminController",
-    "Method": "SearchClients",
-    "RelativePath": "api/Admin/search-clients",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "search",
-        "Type": "System.String",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "FitnessClub.Controllers.AdminController",
-    "Method": "GetStatistics",
-    "RelativePath": "api/Admin/statistics",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "FitnessClub.Controllers.AdminController",
-    "Method": "GetDetailedStatistics",
-    "RelativePath": "api/Admin/statistics-detailed",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "from",
-        "Type": "System.DateTime",
-        "IsRequired": false
-      },
-      {
-        "Name": "to",
-        "Type": "System.DateTime",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "FitnessClub.Controllers.AdminController",
+    "ContainingType": "FitnessClub.Controllers.AdminAttendanceController",
     "Method": "GetTodayAttendanceStats",
-    "RelativePath": "api/Admin/today-attendance-stats",
+    "RelativePath": "api/admin/attendance/today-stats",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -142,9 +47,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "FitnessClub.Controllers.AdminController",
+    "ContainingType": "FitnessClub.Controllers.AdminAttendanceController",
     "Method": "GetTodayVisits",
-    "RelativePath": "api/Admin/today-visits",
+    "RelativePath": "api/admin/attendance/today-visits",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -158,51 +63,136 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "FitnessClub.Controllers.AuthController",
+    "ContainingType": "FitnessClub.Controllers.AdminClientsController",
+    "Method": "CreateClient",
+    "RelativePath": "api/admin/clients",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "FitnessClub.Core.Requests.CreateClientRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FitnessClub.Controllers.AdminClientsController",
+    "Method": "SearchClients",
+    "RelativePath": "api/admin/clients",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "search",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FitnessClub.Controllers.AdminClientsController",
+    "Method": "GetClientDetails",
+    "RelativePath": "api/admin/clients/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FitnessClub.Controllers.AdminMembershipsController",
+    "Method": "AddMembership",
+    "RelativePath": "api/admin/memberships",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "FitnessClub.Core.Requests.AddMembershipRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FitnessClub.Controllers.AdminStatisticsController",
+    "Method": "GetStatistics",
+    "RelativePath": "api/admin/statistics",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FitnessClub.Controllers.AdminStatisticsController",
+    "Method": "GetDetailedStatistics",
+    "RelativePath": "api/admin/statistics/detailed",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "from",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "to",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FitnessClub.Controllers.AuthLoginController",
     "Method": "Login",
-    "RelativePath": "api/Auth/login",
+    "RelativePath": "api/auth/login",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "request",
-        "Type": "FitnessClub.Controllers.LoginRequest",
+        "Type": "Microsoft.AspNetCore.Identity.Data.LoginRequest",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "FitnessClub.Controllers.AuthController",
+    "ContainingType": "FitnessClub.Controllers.AuthRegistrationController",
     "Method": "Register",
-    "RelativePath": "api/Auth/register",
+    "RelativePath": "api/auth/register",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "request",
-        "Type": "FitnessClub.Controllers.RegisterRequest",
+        "Type": "FitnessClub.Core.Requests.RegisterUserRequest",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "FitnessClub.Controllers.ClientController",
-    "Method": "CanCheckIn",
-    "RelativePath": "api/Client/can-check-in",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "FitnessClub.Controllers.ClientController",
+    "ContainingType": "FitnessClub.Controllers.ClientAttendanceController",
     "Method": "GetMyAttendances",
-    "RelativePath": "api/Client/my-attendances",
+    "RelativePath": "api/client/attendance",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -210,9 +200,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "FitnessClub.Controllers.ClientController",
-    "Method": "GetMyMembership",
-    "RelativePath": "api/Client/my-membership",
+    "ContainingType": "FitnessClub.Controllers.ClientProfileController",
+    "Method": "GetMembership",
+    "RelativePath": "api/client/membership",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -220,9 +210,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "FitnessClub.Controllers.TestController",
-    "Method": "Get",
-    "RelativePath": "api/Test",
+    "ContainingType": "FitnessClub.Controllers.ClientProfileController",
+    "Method": "GetProfile",
+    "RelativePath": "api/client/profile",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

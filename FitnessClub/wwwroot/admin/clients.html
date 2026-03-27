@@ -141,8 +141,8 @@
                 <a href="/" class="nav-link"><i class="fas fa-home"></i> Главная</a>
                 <a href="/admin/dashboard.html" class="nav-link"><i class="fas fa-tachometer-alt"></i> Дашборд</a>
                 <a href="/admin/clients.html" class="nav-link active"><i class="fas fa-users"></i> Клиенты</a>
-                <a href="/admin/attendance.html" class="nav-link"><i class="fas fa-calendar-check"></i> Посещения</a>
-                <a href="/admin/statistics.html" class="nav-link"><i class="fas fa-chart-bar"></i> Статистика</a>
+                <!--<a href="/admin/attendance.html" class="nav-link"><i class="fas fa-calendar-check"></i> Посещения</a>-->
+                <!--<a href="/admin/statistics.html" class="nav-link"><i class="fas fa-chart-bar"></i> Статистика</a>-->
                 <a href="#" class="nav-link" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Выйти</a>
             </div>
             <button class="nav-toggle" id="navToggle">
@@ -161,12 +161,7 @@
             <h3><i class="fas fa-search"></i> Поиск клиентов</h3>
             <div class="search-box">
                 <input type="text" id="clientSearch" class="form-control" placeholder="Введите имя, фамилию, email или телефон...">
-                <button id="createClientBtn" class="btn btn-primary">
-                    <i class="fas fa-user-plus"></i> Новый клиент
-                </button>
-                <button onclick="refreshClients()" class="btn btn-secondary">
-                    <i class="fas fa-sync-alt"></i> Обновить
-                </button>
+                
             </div>
             <p style="margin-top: 10px; color: #666; font-size: 0.9rem;">
                 <i class="fas fa-info-circle"></i> Поиск осуществляется по всем полям клиента
@@ -249,139 +244,7 @@
     <footer class="footer">
         <p>Фитнес-клуб "Сила" &copy; 2026. Управление клиентами.</p>
     </footer>
-
     <script src="/js/utils.js"></script>
     <script src="/js/admin.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Инициализация поиска
-            const searchInput = document.getElementById('clientSearch');
-            if (searchInput) {
-                searchInput.addEventListener('input', debounce(searchClients, 300));
-                searchInput.focus();
-            }
-
-            // Кнопка создания клиента
-            const createClientBtn = document.getElementById('createClientBtn');
-            if (createClientBtn) {
-                createClientBtn.addEventListener('click', () => {
-                    const modal = document.getElementById('createClientModal');
-                    if (modal) modal.style.display = 'block';
-                });
-            }
-
-            // Закрытие модальных окон
-            const closeModalBtns = document.querySelectorAll('.close-modal');
-            closeModalBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const modal = this.closest('.modal');
-                    if (modal) modal.style.display = 'none';
-                });
-            });
-
-            // Закрытие модального окна при клике вне его
-            window.addEventListener('click', function(event) {
-                const modals = document.querySelectorAll('.modal');
-                modals.forEach(modal => {
-                    if (event.target === modal) {
-                        modal.style.display = 'none';
-                    }
-                });
-            });
-
-            // Автоматический поиск при загрузке страницы
-            searchClients();
-        });
-
-        function refreshClients() {
-            searchClients();
-            showAlert('Список клиентов обновлён', 'success');
-        }
-
-        function showClientDetails(clientId, clientName) {
-            // Загрузка детальной информации о клиенте
-            api.get(`/api/admin/client-details/${clientId}`)
-                .then(response => {
-                    const content = document.getElementById('clientDetailsContent');
-                    const membership = response.membership;
-
-                    let html = `
-                        <div class="client-info-grid">
-                            <div class="info-item">
-                                <div class="info-label">Имя:</div>
-                                <div class="info-value">${response.firstName} ${response.lastName}</div>
-                            </div>
-                            <div class="info-item">
-                                <div class="info-label">Email:</div>
-                                <div class="info-value">${response.email}</div>
-                            </div>
-                            <div class="info-item">
-                                <div class="info-label">Телефон:</div>
-                                <div class="info-value">${response.phone || 'Не указан'}</div>
-                            </div>
-                            <div class="info-item">
-                                <div class="info-label">Дата регистрации:</div>
-                                <div class="info-value">${formatDate(response.createdAt)}</div>
-                            </div>
-                        </div>
-                    `;
-
-                    if (membership) {
-                        const endDate = new Date(membership.endDate).toLocaleDateString('ru-RU');
-                        const startDate = new Date(membership.startDate).toLocaleDateString('ru-RU');
-                        const status = membership.isValid ? 'Активен' : 'Истёк';
-                        const statusClass = membership.isValid ? 'status-active' : 'status-expired';
-
-                        html += `
-                            <h4 style="margin-top: 20px;">Информация об абонементе</h4>
-                            <div class="client-info-grid">
-                                <div class="info-item">
-                                    <div class="info-label">Тип:</div>
-                                    <div class="info-value">${getMembershipTypeName(membership.type)}</div>
-                                </div>
-                                <div class="info-item">
-                                    <div class="info-label">Статус:</div>
-                                    <div class="info-value"><span class="status-badge ${statusClass}">${status}</span></div>
-                                </div>
-                                <div class="info-item">
-                                    <div class="info-label">Срок действия:</div>
-                                    <div class="info-value">${startDate} - ${endDate}</div>
-                                </div>
-                                <div class="info-item">
-                                    <div class="info-label">Стоимость:</div>
-                                    <div class="info-value">${formatCurrency(membership.price)}</div>
-                                </div>
-                            </div>
-                        `;
-                    } else {
-                        html += `<p class="no-membership">У клиента нет активного абонемента</p>`;
-                    }
-
-                    content.innerHTML = html;
-                    document.getElementById('clientDetailsModal').style.display = 'block';
-                })
-                .catch(error => {
-                    showAlert('Не удалось загрузить информацию о клиенте', 'error');
-                });
-        }
-
-        function getMembershipTypeName(type) {
-            const types = {
-                'OneTime': 'Разовый',
-                'Monthly': 'Месячный',
-                'Quarterly': 'Квартальный',
-                'Yearly': 'Годовой'
-            };
-            return types[type] || type;
-        }
-
-        // Обновляем функцию searchClients для подсчёта клиентов
-        const originalSearchClients = searchClients;
-        searchClients = async function() {
-            await originalSearchClients();
-            const rows = document.querySelectorAll('#clientSearchResults tr:not(.text-center)');
-            document.getElementById('clientCount').textContent = rows.length;
-        }
-    </script>
 </body>
 </html>

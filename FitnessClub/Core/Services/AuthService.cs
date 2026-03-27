@@ -33,7 +33,7 @@ namespace FitnessClub.Core.Services
                 {
                     return null;
                 }
-                user.LastLoginAt = DateTime.Now;
+                user.LastLoginAt = DateTime.UtcNow;
                 await _context.SaveChangesAsync();
 
                 return user;
@@ -55,18 +55,15 @@ namespace FitnessClub.Core.Services
             return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
         }
 
-        public async Task<User> Register(string email, string password,
-            string firstName, string lastName, string phone, string role)
+        public async Task<User> Register(string email,string password,string firstName,string lastName,string phone)
         {
-            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
+
             if (existingUser != null)
             {
                 throw new Exception("Пользователь с таким email уже существует");
             }
-            if (!Enum.TryParse<UserRole>(role, out var userRole))
-            {
-                throw new Exception("Некорректная роль пользователя");
-            }
+
             var user = new User
             {
                 Email = email,
@@ -74,29 +71,14 @@ namespace FitnessClub.Core.Services
                 FirstName = firstName,
                 LastName = lastName,
                 Phone = phone,
-                Role = userRole,
-                CreatedAt = DateTime.Now,
+                Role = UserRole.Client,
+                CreatedAt = DateTime.UtcNow,
                 IsActive = true,
             };
 
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
-            if (user.Role == UserRole.Client)
-            {
-                var membership = new Membership
-                {
-                    UserId = user.Id,
-                    Type = MembershipType.OneTime,
-                    StartDate = DateTime.Now,
-                    EndDate = DateTime.Now.AddMonths(1),
-                    Price = 0,
-                    IsActive = false, // Не активен до покупки
-                    RemainingVisits = 0
-                };
 
-                await _context.Memberships.AddAsync(membership);
-                await _context.SaveChangesAsync();
-            }
             return user;
         }
     }

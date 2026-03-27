@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <a id="adminLink" href="/dashboard.html" style="display:none;">Админ-панель</a>
+    <a id="clientLink" href="/profile.html" style="display:none;">Мой кабинет</a>
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
@@ -86,73 +88,7 @@
         <p>Фитнес-клуб "Сила" &copy; 2026. Система управления клубом.</p>
         <p class="footer-info">Для доступа к админ-панели войдите как администратор</p>
     </footer>
-
     <script src="/js/utils.js"></script>
     <script src="/js/auth.js"></script>
-    <script>
-        // Проверка статуса системы
-        async function checkSystemStatus() {
-            try {
-                const response = await fetch('/api/test');
-                const data = await response.json();
-
-                document.getElementById('systemStatus').innerHTML = `
-                        <div class="status-success">
-                            <i class="fas fa-check-circle"></i>
-                            <div>
-                                <strong>Система работает</strong>
-                                <p>Время сервера: ${data.time}, Дата: ${data.date}</p>
-                            </div>
-                        </div>
-                    `;
-            } catch (error) {
-                document.getElementById('systemStatus').innerHTML = `
-                        <div class="status-error">
-                            <i class="fas fa-exclamation-circle"></i>
-                            <div>
-                                <strong>Ошибка подключения</strong>
-                                <p>Не удалось соединиться с сервером</p>
-                            </div>
-                        </div>
-                    `;
-            }
-        }
-
-        // Проверка авторизации
-        function updateNavigation() {
-            const token = localStorage.getItem('token');
-            const role = localStorage.getItem('role');
-
-            if (token && role) {
-                document.getElementById('loginLink').style.display = 'none';
-                document.getElementById('registerLink').style.display = 'none';
-                document.getElementById('logoutLink').style.display = 'block';
-
-                if (role === 'Admin') {
-                    document.getElementById('adminLink').style.display = 'block';
-                } else {
-                    document.getElementById('clientLink').style.display = 'block';
-                }
-            }
-        }
-
-        // Инициализация
-        document.addEventListener('DOMContentLoaded', () => {
-            checkSystemStatus();
-            updateNavigation();
-
-            // Мобильное меню
-            document.getElementById('navToggle').addEventListener('click', () => {
-                document.getElementById('navLinks').classList.toggle('show');
-            });
-
-            // Выход
-            document.getElementById('logoutLink').addEventListener('click', (e) => {
-                e.preventDefault();
-                localStorage.clear();
-                window.location.href = '/';
-            });
-        });
-    </script>
 </body>
 </html>

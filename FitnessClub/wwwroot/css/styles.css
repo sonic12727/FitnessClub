@@ -629,3 +629,50 @@ body {
         }
     }
 }
+
+.admin-dashboard-btn 
+{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.22);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+}
+
+    .admin-dashboard-btn:hover 
+    {
+        transform: translateY(-1px);
+        box-shadow: 0 12px 24px rgba(37, 99, 235, 0.28);
+    }
+
+    .admin-dashboard-btn:active 
+    {
+        transform: translateY(0);
+        box-shadow: 0 6px 14px rgba(37, 99, 235, 0.2);
+    }
+
+    .admin-dashboard-btn:focus-visible 
+    {
+        outline: 3px solid rgba(37, 99, 235, 0.35);
+        outline-offset: 3px;
+    }
+
+.admin-dashboard-btn__icon 
+{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    font-size: 16px;
+}

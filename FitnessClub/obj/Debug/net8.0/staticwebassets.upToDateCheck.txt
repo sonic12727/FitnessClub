@@ -1,8 +1,6 @@
-wwwroot\admin\attedance.html
+wwwroot\admin\attendance.html
 wwwroot\admin\clients.html
-wwwroot\admin\dashboard.html
 wwwroot\admin\statistics.html
-wwwroot\client\profile.html
 wwwroot\css\styles.css
 wwwroot\index.html
 wwwroot\js\admin.js
@@ -11,3 +9,5 @@ wwwroot\js\client.js
 wwwroot\js\utils.js
 wwwroot\login.html
 wwwroot\register.html
+wwwroot\admin\dashboard.html
+wwwroot\client\profile.html

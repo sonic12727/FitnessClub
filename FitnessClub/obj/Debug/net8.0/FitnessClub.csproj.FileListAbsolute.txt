@@ -139,3 +139,6 @@ C:\Users\user\source\repos\FitnessClub\FitnessClub\obj\Debug\net8.0\FitnessClub.
 C:\Users\user\source\repos\FitnessClub\FitnessClub\obj\Debug\net8.0\FitnessClub.genruntimeconfig.cache
 C:\Users\user\source\repos\FitnessClub\FitnessClub\obj\Debug\net8.0\ref\FitnessClub.dll
 C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\wwwroot\admin\dashboard.html
+C:\Users\user\source\repos\FitnessClub\FitnessClub\obj\Debug\net8.0\FitnessClub.sourcelink.json
+C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\Npgsql.dll
+C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll

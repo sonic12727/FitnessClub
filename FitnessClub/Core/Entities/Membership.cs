@@ -4,6 +4,7 @@ namespace FitnessClub.Core.Entities
 {
     public class Membership
     {
+        public User User { get; set; }
         public int Id { get; set; }
         public int UserId { get; set; }
         public MembershipType Type { get; set; }
@@ -15,7 +16,7 @@ namespace FitnessClub.Core.Entities
 
         public bool IsValid()
         {
-            bool isValid = IsActive && EndDate > DateTime.Now;
+            bool isValid = IsActive && EndDate > DateTime.UtcNow;
 
             // Для разовых абонементов дополнительная проверка
             if (Type == MembershipType.OneTime)
@@ -25,7 +26,5 @@ namespace FitnessClub.Core.Entities
             Console.WriteLine(isValid ? "Абонемент активен!" : "Абонемент неактивен!");
             return isValid;
         }
-
-        public User User { get; set; }
     }
 }

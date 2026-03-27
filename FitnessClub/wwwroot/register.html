@@ -1,10 +1,165 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация - Фитнес-клуб "Сила"</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .auth-page {
+            min-height: calc(100vh - 120px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 560px;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+            overflow: hidden;
+        }
+
+        .auth-card__header {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: #fff;
+            padding: 28px 30px;
+        }
+
+            .auth-card__header h1 {
+                margin: 0 0 8px 0;
+                font-size: 1.9rem;
+            }
+
+            .auth-card__header p {
+                margin: 0;
+                opacity: 0.95;
+            }
+
+        .auth-card__body {
+            padding: 30px;
+        }
+
+        .auth-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+            .auth-grid .full-width {
+                grid-column: 1 / -1;
+            }
+
+        .auth-actions {
+            margin-top: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .auth-submit {
+            width: 100%;
+            border-radius: 12px;
+            font-weight: 700;
+        }
+
+        .auth-footer {
+            text-align: center;
+            color: #666;
+        }
+
+            .auth-footer a {
+                color: #1a2980;
+                font-weight: 600;
+                text-decoration: none;
+            }
+
+        @media (max-width: 640px) {
+            .auth-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .auth-card__header,
+            .auth-card__body {
+                padding: 22px;
+            }
+        }
+    </style>
 </head>
 <body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-dumbbell"></i>
+                <span>Фитнес-клуб "Сила"</span>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="/" class="nav-link"><i class="fas fa-home"></i> Главная</a>
+                <a href="/login.html" class="nav-link"><i class="fas fa-sign-in-alt"></i> Вход</a>
+                <a href="/register.html" class="nav-link active"><i class="fas fa-user-plus"></i> Регистрация</a>
+            </div>
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
 
+    <main class="auth-page">
+        <div class="auth-card">
+            <div class="auth-card__header">
+                <h1>Создать аккаунт</h1>
+                <p>Зарегистрируйтесь для доступа к личному кабинету</p>
+            </div>
+
+            <div class="auth-card__body">
+                <form id="registerForm">
+                    <div class="auth-grid">
+                        <div class="form-group">
+                            <label for="firstName">Имя</label>
+                            <input type="text" id="firstName" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="lastName">Фамилия</label>
+                            <input type="text" id="lastName" class="form-control" required>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="phone">Телефон</label>
+                            <input type="text" id="phone" class="form-control">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" class="form-control" required>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="password">Пароль</label>
+                            <input type="password" id="password" class="form-control" minlength="6" required>
+                        </div>
+                    </div>
+
+                    <div class="auth-actions">
+                        <button type="submit" class="btn btn-primary auth-submit">
+                            <i class="fas fa-user-check"></i> Зарегистрироваться
+                        </button>
+
+                        <div class="auth-footer">
+                            Уже есть аккаунт?
+                            <a href="/login.html">Войти</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="/js/utils.js"></script>
+    <script src="/js/auth.js"></script>
 </body>
 </html>

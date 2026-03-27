@@ -200,8 +200,8 @@
                 <a href="/" class="nav-link"><i class="fas fa-home"></i> Главная</a>
                 <a href="/admin/dashboard.html" class="nav-link active"><i class="fas fa-tachometer-alt"></i> Дашборд</a>
                 <a href="/admin/clients.html" class="nav-link"><i class="fas fa-users"></i> Клиенты</a>
-                <a href="/admin/attendance.html" class="nav-link"><i class="fas fa-calendar-check"></i> Посещения</a>
-                <a href="/admin/statistics.html" class="nav-link"><i class="fas fa-chart-bar"></i> Статистика</a>
+                <!--<a href="/admin/attendance.html" class="nav-link"><i class="fas fa-calendar-check"></i> Посещения</a>-->
+                <!--<a href="/admin/statistics.html" class="nav-link"><i class="fas fa-chart-bar"></i> Статистика</a>-->
                 <a href="#" class="nav-link" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Выйти</a>
             </div>
             <button class="nav-toggle" id="navToggle">
@@ -217,8 +217,8 @@
             <div class="admin-menu">
                 <a href="/admin/dashboard.html" class="menu-link active"><i class="fas fa-tachometer-alt"></i> Дашборд</a>
                 <a href="/admin/clients.html" class="menu-link"><i class="fas fa-users"></i> Клиенты</a>
-                <a href="/admin/attendance.html" class="menu-link"><i class="fas fa-calendar-check"></i> Посещения</a>
-                <a href="/admin/statistics.html" class="menu-link"><i class="fas fa-chart-bar"></i> Статистика</a>
+                <!--<a href="/admin/attendance.html" class="menu-link"><i class="fas fa-calendar-check"></i> Посещения</a>-->
+                <!--<a href="/admin/statistics.html" class="menu-link"><i class="fas fa-chart-bar"></i> Статистика</a>-->
             </div>
         </div>
 
@@ -267,14 +267,6 @@
                     <a href="/admin/clients.html" class="btn-admin" style="background: #26d0ce; color: white;">
                         <i class="fas fa-search"></i>
                         <span>Найти клиента</span>
-                    </a>
-                    <a href="/admin/attendance.html" class="btn-admin" style="background: #4CAF50; color: white;">
-                        <i class="fas fa-check-circle"></i>
-                        <span>Отметить посещение</span>
-                    </a>
-                    <a href="/admin/statistics.html" class="btn-admin" style="background: #FF9800; color: white;">
-                        <i class="fas fa-chart-line"></i>
-                        <span>Просмотр статистики</span>
                     </a>
                 </div>
             </div>
@@ -374,21 +366,7 @@
         <p>Фитнес-клуб "Сила" &copy; 2026. Административная панель.</p>
         <p class="footer-info">Только для авторизованных администраторов</p>
     </footer>
-
     <script src="/js/utils.js"></script>
     <script src="/js/admin.js"></script>
-    <script>
-        function refreshDashboard() {
-            loadDashboardStats();
-            loadRecentClients();
-            loadTodayVisits();
-            showAlert('Данные обновлены', 'success');
-        }
-
-        // Инициализация серверной даты
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('serverDate').textContent = new Date().toLocaleDateString('ru-RU');
-        });
-    </script>
 </body>
 </html>

@@ -63,46 +63,7 @@
         </form>
         <div class="error" id="errorMessage"></div>
     </div>
-
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            try {
-                const response = await fetch('/api/auth/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ email, password })
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    localStorage.setItem('token', data.token);
-                    localStorage.setItem('role', data.role);
-
-                    if (data.role === 'Admin') {
-                        window.location.href = 'admin/dashboard.html';
-                    } else {
-                        window.location.href = 'client/dashboard.html';
-                    }
-                } else {
-                    document.getElementById('errorMessage').textContent = 'Ошибка входа';
-                }
-            } catch (error) {
-                document.getElementById('errorMessage').textContent = 'Ошибка соединения';
-            }
-        });
-
-        // Тестовые данные для быстрого входа
-        window.onload = () => {
-            document.getElementById('email').value = 'admin@fitness.ru';
-            document.getElementById('password').value = 'admin123';
-        };
-    </script>
+    <script src="/js/utils.js"></script>
+    <script src="/js/auth.js"></script>
 </body>
 </html>

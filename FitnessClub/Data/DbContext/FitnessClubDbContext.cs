@@ -5,9 +5,9 @@ namespace FitnessClub.Data
 {
     public class FitnessClubDbContext : DbContext
     {
-        public FitnessClubDbContext(DbContextOptions<FitnessClubDbContext> options)
-            : base(options)
+        public FitnessClubDbContext(DbContextOptions<FitnessClubDbContext> options) : base(options)
         {
+
         }
 
         public DbSet<User> Users { get; set; }
