@@ -2,9 +2,11 @@
 {
     public enum MembershipType
     {
-        OneTime = 1,     // Разовый - 1 посещение
-        Monthly = 2,     // Месячный - 30 дней
-        Quarterly = 3,   // Квартальный - 90 дней
-        Yearly = 4,      // Годовой - 365 дней
+        OneTime = 1,
+        Visits8 = 2,
+        Visits12 = 3,
+        Monthly = 4,
+        Quarterly = 5,
+        Yearly = 6,
     }
 }

@@ -21,7 +21,7 @@ namespace FitnessClub.Data
             {
                 entity.HasKey(u => u.Id);
                 entity.HasIndex(u => u.Email).IsUnique(); // User имеет уникальный Email
-                entity.Property(u => u.Email).IsRequired().HasMaxLength(50);
+                entity.Property(u => u.Email).HasMaxLength(50);
                 entity.Property(u => u.FirstName).IsRequired().HasMaxLength(20);
                 entity.Property(u => u.LastName).IsRequired().HasMaxLength(20);
                 entity.Property(u => u.PasswordHash).IsRequired();
@@ -45,9 +45,7 @@ namespace FitnessClub.Data
                 entity.Property(a => a.CheckInTime).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                 // User может иметь много Attedances
-                entity.HasOne(a => a.User)
-                      .WithMany(u => u.Attendances)
-                      .HasForeignKey(a => a.UserId);
+                entity.HasOne(a => a.User).WithMany(u => u.Attendances).HasForeignKey(a => a.UserId);
             });
         }
     }

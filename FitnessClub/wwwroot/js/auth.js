@@ -130,9 +130,3 @@ function checkAuth()
         }, 1000);
     }
 }
-
-function logout()
-{
-    localStorage.clear();
-    window.location.href = '/';
-}

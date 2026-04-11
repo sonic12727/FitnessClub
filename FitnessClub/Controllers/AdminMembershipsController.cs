@@ -27,14 +27,12 @@ namespace FitnessClub.Controllers
             {
                 if (!Enum.TryParse<MembershipType>(request.Type, out var membershipType))
                 {
-                    return BadRequest("Некорректный тип абонемента. Доступные: OneTime, Monthly, Quarterly, Yearly");
+                    return BadRequest("Некорректный тип абонемента. Доступные: OneTime, Visits8, Visits12, Monthly, Quarterly, Yearly");
                 }
 
                 var membership = await _membershipService.AddMembershipAsync(
                     request.UserId,
-                    membershipType,
-                    request.DurationMonths,
-                    request.Price);
+                    membershipType);
 
                 return Ok(new
                 {

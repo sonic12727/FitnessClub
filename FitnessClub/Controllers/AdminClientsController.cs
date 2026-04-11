@@ -44,12 +44,38 @@ namespace FitnessClub.Controllers
             }
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateClient(int id, [FromBody] UpdateClientRequest request)
+        {
+            try
+            {
+                var client = await _clientService.UpdateClientAsync(id, request);
+
+                return Ok(new
+                {
+                    client.Id,
+                    client.FirstName,
+                    client.LastName,
+                    client.Email,
+                    client.Phone,
+                    Message = "Данные клиента обновлены"
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при обновлении клиента {ClientId}", id);
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> SearchClients([FromQuery] string search = "")
         {
             try
             {
                 var clients = await _clientService.SearchClientsAsync(search);
+                var localToday = DateTime.Now.Date;
+                var localTomorrow = localToday.AddDays(1);
 
                 return Ok(clients.Select(c => new
                 {
@@ -59,6 +85,7 @@ namespace FitnessClub.Controllers
                     c.Email,
                     c.Phone,
                     c.CreatedAt,
+                    HasVisitedToday = c.Attendances.Any(a => a.CheckInTime >= localToday && a.CheckInTime < localTomorrow),
                     Membership = c.Membership == null ? null : new
                     {
                         c.Membership.Type,

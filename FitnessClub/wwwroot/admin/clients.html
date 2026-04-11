@@ -92,6 +92,54 @@
             margin: 20px 0;
         }
 
+        /*Модалки*/
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+            background: none;
+            border: none;
+            padding: 5px;
+        }
+
+            .close-modal:hover {
+                color: #333;
+            }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+
         .info-item {
             padding: 10px;
             background: #f8f9fa;
@@ -161,7 +209,7 @@
             <h3><i class="fas fa-search"></i> Поиск клиентов</h3>
             <div class="search-box">
                 <input type="text" id="clientSearch" class="form-control" placeholder="Введите имя, фамилию, email или телефон...">
-                
+
             </div>
             <p style="margin-top: 10px; color: #666; font-size: 0.9rem;">
                 <i class="fas fa-info-circle"></i> Поиск осуществляется по всем полям клиента
@@ -196,48 +244,43 @@
         </div>
     </main>
 
-    <!-- Модальное окно создания клиента -->
-    <div id="createClientModal" class="modal">
+    <div id="editClientModal" class="modal">
         <div class="modal-content">
-            <span class="close-modal" onclick="closeModal('createClientModal')">&times;</span>
-            <h3>Создание нового клиента</h3>
-            <form id="createClientForm">
+            <span class="close-modal" onclick="closeModal('editClientModal')">&times;</span>
+            <h3>Редактирование клиента</h3>
+            <form id="editClientForm">
+                <input type="hidden" id="editClientId">
+
                 <div class="form-group">
-                    <label>Email *</label>
-                    <input type="email" id="newClientEmail" class="form-control" required>
+                    <label>Email (опционально)</label>
+                    <input type="email" id="editClientEmail" class="form-control">
                 </div>
+
                 <div class="form-group">
-                    <label>Пароль *</label>
-                    <input type="password" id="newClientPassword" class="form-control" required>
+                    <label>Новый пароль (если нужно)</label>
+                    <input type="password" id="editClientPassword" class="form-control">
                 </div>
+
                 <div class="form-group">
                     <label>Имя *</label>
-                    <input type="text" id="newClientFirstName" class="form-control" required>
+                    <input type="text" id="editClientFirstName" class="form-control" required>
                 </div>
+
                 <div class="form-group">
                     <label>Фамилия *</label>
-                    <input type="text" id="newClientLastName" class="form-control" required>
+                    <input type="text" id="editClientLastName" class="form-control" required>
                 </div>
+
                 <div class="form-group">
                     <label>Телефон</label>
-                    <input type="tel" id="newClientPhone" class="form-control">
+                    <input type="tel" id="editClientPhone" class="form-control">
                 </div>
+
                 <div class="modal-buttons">
-                    <button type="button" onclick="createClient()" class="btn btn-primary">Создать клиента</button>
-                    <button type="button" onclick="closeModal('createClientModal')" class="btn btn-secondary">Отмена</button>
+                    <button type="button" onclick="updateClient()" class="btn btn-primary">Сохранить</button>
+                    <button type="button" onclick="closeModal('editClientModal')" class="btn btn-secondary">Отмена</button>
                 </div>
             </form>
-        </div>
-    </div>
-
-    <!-- Модальное окно деталей клиента -->
-    <div id="clientDetailsModal" class="modal">
-        <div class="modal-content client-details-modal">
-            <span class="close-modal" onclick="closeModal('clientDetailsModal')">&times;</span>
-            <h3>Детали клиента</h3>
-            <div id="clientDetailsContent">
-                <p>Загрузка информации...</p>
-            </div>
         </div>
     </div>
 

@@ -39,21 +39,18 @@ namespace FitnessClub.Core.Services
             var startOfDay = now.Date;
             var endOfDay = startOfDay.AddDays(1);
 
-            var alreadyVisitedToday = await _context.Attendances
-                .AnyAsync(a => a.UserId == userId &&
-                               a.CheckInTime >= startOfDay &&
-                               a.CheckInTime < endOfDay);
+            var alreadyVisitedToday = await _context.Attendances.AnyAsync(a => a.UserId == userId && a.CheckInTime >= startOfDay && a.CheckInTime < endOfDay);
 
             if (alreadyVisitedToday)
             {
                 throw new Exception("Клиент уже отмечен сегодня");
             }
 
-            if (user.Membership.Type == MembershipType.OneTime)
+            if (user.Membership.IsVisitBased())
             {
                 if (user.Membership.RemainingVisits <= 0)
                 {
-                    throw new Exception("Разовые посещения закончились");
+                    throw new Exception("Посещения по абонементу закончились");
                 }
 
                 user.Membership.RemainingVisits--;
@@ -75,22 +72,22 @@ namespace FitnessClub.Core.Services
             await _context.Attendances.AddAsync(attendance);
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation(
-                "Посещение отмечено для пользователя {UserId} администратором {AdminName}",
-                userId,
-                adminName);
+            _logger.LogInformation("Посещение отмечено для пользователя {UserId} администратором {AdminName}", userId, adminName);
 
             return attendance;
         }
 
         public async Task<List<object>> GetVisitsByDateAsync(DateTime date)
         {
-            var start = date.Date;
-            var end = start.AddDays(1);
+            var localDate = DateTime.SpecifyKind(date.Date, DateTimeKind.Unspecified);
+            var localEnd = localDate.AddDays(1);
+
+            var startUtc = TimeZoneInfo.ConvertTimeToUtc(localDate, TimeZoneInfo.Local);
+            var endUtc = TimeZoneInfo.ConvertTimeToUtc(localEnd, TimeZoneInfo.Local);
 
             var visits = await _context.Attendances
                 .Include(a => a.User)
-                .Where(a => a.CheckInTime >= start && a.CheckInTime < end)
+                .Where(a => a.CheckInTime >= startUtc && a.CheckInTime < endUtc)
                 .OrderByDescending(a => a.CheckInTime)
                 .ToListAsync();
 

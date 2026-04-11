@@ -96,6 +96,27 @@
   },
   {
     "ContainingType": "FitnessClub.Controllers.AdminClientsController",
+    "Method": "UpdateClient",
+    "RelativePath": "api/admin/clients/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "FitnessClub.Core.Requests.UpdateClientRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FitnessClub.Controllers.AdminClientsController",
     "Method": "GetClientDetails",
     "RelativePath": "api/admin/clients/{id}",
     "HttpMethod": "GET",

@@ -17,22 +17,22 @@ namespace FitnessClub.Core.Services
 
         public async Task<object> GetStatisticsAsync()
         {
-            var now = DateTime.UtcNow;
+            var nowUtc = DateTime.UtcNow;
+            var localNow = TimeZoneInfo.ConvertTimeFromUtc(nowUtc, TimeZoneInfo.Local);
 
-            var totalClients = await _context.Users
-                .CountAsync(u => u.Role == UserRole.Client);
+            var localStart = DateTime.SpecifyKind(localNow.Date, DateTimeKind.Unspecified);
+            var localEnd = localStart.AddDays(1);
 
-            var activeMemberships = await _context.Memberships
-                .CountAsync(m => m.IsActive && m.EndDate > now);
+            var todayStartUtc = TimeZoneInfo.ConvertTimeToUtc(localStart, TimeZoneInfo.Local);
+            var todayEndUtc = TimeZoneInfo.ConvertTimeToUtc(localEnd, TimeZoneInfo.Local);
 
-            var todayStart = now.Date;
-            var todayEnd = todayStart.AddDays(1);
+            var totalClients = await _context.Users.CountAsync(u => u.Role == UserRole.Client);
 
-            var todayVisits = await _context.Attendances
-                .CountAsync(a => a.CheckInTime >= todayStart && a.CheckInTime < todayEnd);
+            var activeMemberships = await _context.Memberships.CountAsync(m => m.IsActive && m.EndDate > nowUtc);
 
-            var totalRevenue = await _context.Memberships
-                .SumAsync(m => (decimal?)m.Price) ?? 0;
+            var todayVisits = await _context.Attendances.CountAsync(a => a.CheckInTime >= todayStartUtc && a.CheckInTime < todayEndUtc);
+
+            var totalRevenue = await _context.Memberships.SumAsync(m => (decimal?)m.Price) ?? 0;
 
             return new
             {

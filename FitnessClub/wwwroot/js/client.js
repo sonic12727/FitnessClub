@@ -53,43 +53,83 @@ async function loadProfileData()
 {
     try
     {
-        const [profileResponse, membershipResponse] = await Promise.all([api.get('/api/client/profile'),api.get('/api/client/membership')]);
+        const [profileResponse, membershipResponse] = await Promise.all
+        ([
+            api.get('/api/client/profile'),
+            api.get('/api/client/membership')
+        ]);
 
-        // Заполнение профиля
+        // Профиль
         document.getElementById('userName').textContent = `${profileResponse.firstName} ${profileResponse.lastName}`;
-        document.getElementById('userEmail').textContent = profileResponse.email;
+        document.getElementById('userEmail').textContent = profileResponse.email && profileResponse.email.trim() !== '' ? profileResponse.email : '—';
+
         document.getElementById('totalVisits').textContent = profileResponse.totalVisits ?? 0;
         document.getElementById('lastMonthVisits').textContent = profileResponse.lastMonthVisits ?? 0;
 
-        // Отображение абонемента
+        // Абонемент
         const membershipContainer = document.getElementById('membershipInfo');
 
         if (membershipResponse.membership)
         {
-            const endDate = new Date(membershipResponse.membership.endDate).toLocaleDateString('ru-RU');
-            const startDate = new Date(membershipResponse.membership.startDate).toLocaleDateString('ru-RU');
+            const type = membershipResponse.membership.type;
+            const isVisitBased = ['OneTime', 'Visits8', 'Visits12'].includes(type);
+            const isTimeBased = ['Monthly', 'Quarterly', 'Yearly'].includes(type);
+
             const status = membershipResponse.membership.isValid ? 'Активен' : 'Не активен';
             const statusClass = membershipResponse.membership.isValid ? 'status-active' : 'status-inactive';
 
-            membershipContainer.innerHTML = `
-                <div class="membership-card">
-                    <h3>
-                    Мой абонемент
-                    </h3>
-                    <div class="membership-details">
-                        <p><strong>Тип:</strong> ${getMembershipTypeName(membershipResponse.membership.type)}</p>
-                        <p><strong>Статус:</strong> <span class="${statusClass}">${status}</span></p>
-                        <p><strong>Срок действия:</strong> ${startDate} - ${endDate}</p>
-                        <p><strong>Стоимость:</strong> ${formatCurrency(membershipResponse.membership.price)}</p>
-                        ${membershipResponse.membership.type === 'OneTime' ?
-                `<p><strong>Осталось посещений:</strong> ${membershipResponse.membership.remainingVisits}</p>` : ''}
+            if (isTimeBased)
+            {
+                const startDate = new Date(membershipResponse.membership.startDate).toLocaleDateString('ru-RU');
+                const endDate = new Date(membershipResponse.membership.endDate).toLocaleDateString('ru-RU');
+
+                membershipContainer.innerHTML =
+                `
+                    <div class="membership-card">
+                        <h3>Мой абонемент</h3>
+                        <div class="membership-details">
+                            <p><strong>Тип:</strong> ${getMembershipTypeName(type)}</p>
+                            <p><strong>Статус:</strong> <span class="${statusClass}">${status}</span></p>
+                            <p><strong>Дата приобретения:</strong> ${startDate}</p>
+                            <p><strong>Дата истечения:</strong> ${endDate}</p>
+                            <p><strong>Стоимость:</strong> ${formatCurrency(membershipResponse.membership.price)}</p>
+                        </div>
                     </div>
-                </div>
-            `;
+                `;
+            }
+            else if (isVisitBased)
+            {
+                membershipContainer.innerHTML =
+                `
+                    <div class="membership-card">
+                        <h3>Мой абонемент</h3>
+                        <div class="membership-details">
+                            <p><strong>Тип:</strong> ${getMembershipTypeName(type)}</p>
+                            <p><strong>Статус:</strong> <span class="${statusClass}">${status}</span></p>
+                            <p><strong>Осталось посещений:</strong> ${membershipResponse.membership.remainingVisits ?? 0}</p>
+                            <p><strong>Стоимость:</strong> ${formatCurrency(membershipResponse.membership.price)}</p>
+                        </div>
+                    </div>
+                `;
+            }
+            else
+            {
+                membershipContainer.innerHTML =
+                `
+                    <div class="membership-card">
+                        <h3>Мой абонемент</h3>
+                        <div class="membership-details">
+                            <p><strong>Тип:</strong> ${getMembershipTypeName(type)}</p>
+                            <p><strong>Статус:</strong> <span class="${statusClass}">${status}</span></p>
+                        </div>
+                    </div>
+                `;
+            }
         }
         else
         {
-            membershipContainer.innerHTML = `
+            membershipContainer.innerHTML = 
+            `
                 <div class="membership-card">
                     <h3>Мой абонемент</h3>
                     <p class="no-membership">У вас нет активного абонемента</p>
@@ -139,16 +179,4 @@ async function loadAttendances()
         console.error('Ошибка загрузки посещений:', error);
         showAlert('Не удалось загрузить историю посещений', 'error');
     }
-}
-
-function getMembershipTypeName(type)
-{
-    const types =
-    {
-        'OneTime': 'Разовый',
-        'Monthly': 'Месячный',
-        'Quarterly': 'Квартальный',
-        'Yearly': 'Годовой'
-    };
-    return types[type] || type;
 }

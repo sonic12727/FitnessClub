@@ -39,6 +39,7 @@ namespace FitnessClub.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Ошибка при отметке посещения пользователя {UserId}", request.UserId);
+
                 return BadRequest(ex.Message);
             }
         }
@@ -48,14 +49,21 @@ namespace FitnessClub.Controllers
         {
             try
             {
-                var targetDate = date?.Date ?? DateTime.UtcNow.Date;
+                var localToday = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.Local).Date;
+                var targetDate = date?.Date ?? localToday;
                 var visits = await _attendanceService.GetVisitsByDateAsync(targetDate);
+
                 return Ok(visits);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Ошибка при получении посещений за день");
-                return StatusCode(500, new { message = "Не удалось получить посещения" });
+
+                return StatusCode(500, new
+                {
+                    message = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
             }
         }
 
@@ -65,11 +73,13 @@ namespace FitnessClub.Controllers
             try
             {
                 var visits = await _attendanceService.GetAttendanceHistoryAsync(from, to);
+
                 return Ok(visits);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Ошибка при получении истории посещений");
+
                 return BadRequest(ex.Message);
             }
         }
@@ -79,12 +89,15 @@ namespace FitnessClub.Controllers
         {
             try
             {
-                var stats = await _attendanceService.GetTodayAttendanceStatsAsync(DateTime.UtcNow.Date);
+                var localToday = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.Local).Date;
+                var stats = await _attendanceService.GetTodayAttendanceStatsAsync(localToday);
+
                 return Ok(stats);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Ошибка при получении статистики посещений за день");
+
                 return BadRequest(ex.Message);
             }
         }

@@ -56,9 +56,22 @@ class ApiClient
 
             if (!response.ok)
             {
-                const errorText = await response.text();
-                console.error('API Error Response:', errorText);
-                throw new Error(errorText || `HTTP ${response.status}`);
+                let errorMessage = `HTTP ${response.status}`;
+                const contentType = response.headers.get('content-type') || '';
+
+                if (contentType.includes('application/json'))
+                {
+                    const errorData = await response.json();
+                    errorMessage = errorData.message || errorData.error || errorData.title || JSON.stringify(errorData);
+                }
+                else
+                {
+                    const errorText = (await response.text()).trim();
+                    errorMessage = errorText.replace(/^"|"$/g, '');
+                }
+
+                console.error('API Error Response:', errorMessage);
+                throw new Error(errorMessage);
             }
 
             const data = await response.json();
@@ -106,31 +119,54 @@ const api = new ApiClient();
 // Вспомогательные функции
 function showAlert(message, type = 'info')
 {
+    const overlay = document.createElement('div');
+    overlay.className = 'alert-overlay';
+
     const alert = document.createElement('div');
     alert.className = `alert alert-${type}`;
-    alert.innerHTML = `
+    alert.innerHTML =
+    `
         <div class="alert-content">
-            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+            <i class="fas fa-${type === 'success'
+            ? 'check-circle'
+            : type === 'error'
+                ? 'exclamation-circle'
+                : type === 'warning'
+                    ? 'triangle-exclamation'
+                    : 'info-circle'}"></i>
             <span>${message}</span>
         </div>
-        <button class="alert-close">&times;</button>
+        <button class="alert-close" type="button">&times;</button>
     `;
 
-    document.body.appendChild(alert);
+    overlay.appendChild(alert);
+    document.body.appendChild(overlay);
 
-    setTimeout(() => alert.classList.add('show'), 10);
-
-    alert.querySelector('.alert-close').addEventListener('click', () =>
+    requestAnimationFrame(() =>
     {
-        alert.classList.remove('show');
-        setTimeout(() => alert.remove(), 300);
+        alert.classList.add('show');
+        overlay.classList.add('show');
     });
 
-    setTimeout(() =>
+    const closeAlert = () =>
     {
         alert.classList.remove('show');
-        setTimeout(() => alert.remove(), 300);
-    }, 5000);
+        overlay.classList.remove('show');
+
+        setTimeout(() =>
+        {
+            overlay.remove();
+        }, 220);
+    };
+
+    alert.querySelector('.alert-close').addEventListener('click', closeAlert);
+
+    overlay.addEventListener('click', (e) =>
+    {
+        if (e.target === overlay) closeAlert();
+    });
+
+    setTimeout(closeAlert, 3500);
 }
 
 function formatDate(dateString)
@@ -151,7 +187,7 @@ function formatCurrency(amount)
     return new Intl.NumberFormat('ru-RU',
     {
         style: 'currency',
-        currency: 'RUB',
+        currency: 'KZT',
         minimumFractionDigits: 0
     }).format(amount);
 }

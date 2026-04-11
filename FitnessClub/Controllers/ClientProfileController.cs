@@ -27,18 +27,24 @@ namespace FitnessClub.Controllers
             try
             {
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
                 if (!int.TryParse(userIdClaim, out var userId))
                 {
                     return Unauthorized("Некорректный токен");
                 }
 
-                var user = await _context.Users
-                    .FirstOrDefaultAsync(u => u.Id == userId && u.Role == UserRole.Client);
+                var user = await _context.Users.Include(u => u.Attendances).FirstOrDefaultAsync(u => u.Id == userId && u.Role == UserRole.Client);
 
                 if (user == null)
                 {
                     return NotFound("Пользователь не найден");
                 }
+
+                var now = DateTime.UtcNow;
+                var monthStart = new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+
+                var totalVisits = user.Attendances.Count;
+                var lastMonthVisits = user.Attendances.Count(a => a.CheckInTime >= monthStart);
 
                 return Ok(new
                 {
@@ -48,7 +54,9 @@ namespace FitnessClub.Controllers
                     user.LastName,
                     user.Phone,
                     user.CreatedAt,
-                    user.LastLoginAt
+                    user.LastLoginAt,
+                    TotalVisits = totalVisits,
+                    LastMonthVisits = lastMonthVisits
                 });
             }
             catch (Exception ex)
