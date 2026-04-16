@@ -179,6 +179,58 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "FitnessClub.Controllers.AdminStatisticsController",
+    "Method": "ExportExcel",
+    "RelativePath": "api/admin/statistics/export-excel",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "type",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "from",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "to",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FitnessClub.Controllers.AdminStatisticsController",
+    "Method": "GetReportPreview",
+    "RelativePath": "api/admin/statistics/report-preview",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "type",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "from",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "to",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "FitnessClub.Controllers.AuthLoginController",
     "Method": "Login",
     "RelativePath": "api/auth/login",

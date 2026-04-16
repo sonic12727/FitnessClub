@@ -1,8 +1,10 @@
-﻿using FitnessClub.Core.Services;
+﻿using FitnessClub.Core.Requests;
+using FitnessClub.Core.Services;
+using FitnessClub.Core.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using FitnessClub.Core.Requests;
+
 
 namespace FitnessClub.Controllers
 {
@@ -49,7 +51,7 @@ namespace FitnessClub.Controllers
         {
             try
             {
-                var localToday = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.Local).Date;
+                var localToday = ClubTimeHelper.GetLocalToday();
                 var targetDate = date?.Date ?? localToday;
                 var visits = await _attendanceService.GetVisitsByDateAsync(targetDate);
 

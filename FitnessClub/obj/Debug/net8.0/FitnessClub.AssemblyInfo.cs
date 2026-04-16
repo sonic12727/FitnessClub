@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FitnessClub")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c1630c0cc80a35576dea78443a615f03dd56419a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+42974757b11d0bb8f93187b40b8ee11aad2baaf9")]
 [assembly: System.Reflection.AssemblyProductAttribute("FitnessClub")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FitnessClub")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

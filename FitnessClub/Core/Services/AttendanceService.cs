@@ -2,6 +2,7 @@
 using FitnessClub.Core.Enums;
 using FitnessClub.Data;
 using Microsoft.EntityFrameworkCore;
+using FitnessClub.Core.Utils;
 
 namespace FitnessClub.Core.Services
 {
@@ -35,11 +36,11 @@ namespace FitnessClub.Core.Services
                 throw new Exception("У клиента нет активного абонемента");
             }
 
-            var now = DateTime.UtcNow;
-            var startOfDay = now.Date;
-            var endOfDay = startOfDay.AddDays(1);
+            var nowUtc = DateTime.UtcNow;
+            var localToday = ClubTimeHelper.GetLocalToday();
+            var (startOfDayUtc, endOfDayUtc) = ClubTimeHelper.GetUtcBoundsForLocalDay(localToday);
 
-            var alreadyVisitedToday = await _context.Attendances.AnyAsync(a => a.UserId == userId && a.CheckInTime >= startOfDay && a.CheckInTime < endOfDay);
+            var alreadyVisitedToday = await _context.Attendances.AnyAsync(a=>a.UserId == userId && a.CheckInTime >= startOfDayUtc && a.CheckInTime < endOfDayUtc);
 
             if (alreadyVisitedToday)
             {
@@ -64,7 +65,7 @@ namespace FitnessClub.Core.Services
             var attendance = new Attendance
             {
                 UserId = userId,
-                CheckInTime = now,
+                CheckInTime = nowUtc,
                 CheckedByAdmin = adminName,
                 Notes = "Посещение отмечено администратором"
             };
@@ -138,25 +139,23 @@ namespace FitnessClub.Core.Services
 
         public async Task<object> GetTodayAttendanceStatsAsync(DateTime date)
         {
-            var start = date.Date;
-            var end = start.AddDays(1);
+            var (startUtc, endUtc) = ClubTimeHelper.GetUtcBoundsForLocalDay(date);
 
-            var totalVisits = await _context.Attendances
-                .CountAsync(a => a.CheckInTime >= start && a.CheckInTime < end);
+            var totalVisits = await _context.Attendances.CountAsync(a => a.CheckInTime >= startUtc && a.CheckInTime < endUtc);
 
             var activeClients = await _context.Attendances
-                .Where(a => a.CheckInTime >= start && a.CheckInTime < end)
+                .Where(a => a.CheckInTime >= startUtc && a.CheckInTime < endUtc)
                 .Select(a => a.UserId)
                 .Distinct()
                 .CountAsync();
 
             var firstVisit = await _context.Attendances
-                .Where(a => a.CheckInTime >= start && a.CheckInTime < end)
+                .Where(a => a.CheckInTime >= startUtc && a.CheckInTime < endUtc)
                 .OrderBy(a => a.CheckInTime)
                 .FirstOrDefaultAsync();
 
             var lastVisit = await _context.Attendances
-                .Where(a => a.CheckInTime >= start && a.CheckInTime < end)
+                .Where(a => a.CheckInTime >= startUtc && a.CheckInTime < endUtc)
                 .OrderByDescending(a => a.CheckInTime)
                 .FirstOrDefaultAsync();
 
@@ -164,8 +163,12 @@ namespace FitnessClub.Core.Services
             {
                 TotalVisits = totalVisits,
                 ActiveClients = activeClients,
-                FirstVisitTime = firstVisit?.CheckInTime.ToString("HH:mm"),
-                LastVisitTime = lastVisit?.CheckInTime.ToString("HH:mm")
+                FirstVisitTime = firstVisit == null
+                    ? null
+                    : TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(firstVisit.CheckInTime, DateTimeKind.Utc), ClubTimeHelper.ClubTimeZone).ToString("HH:mm"),
+                LastVisitTime = lastVisit == null
+                    ? null
+                    : TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(lastVisit.CheckInTime, DateTimeKind.Utc), ClubTimeHelper.ClubTimeZone).ToString("HH:mm")
             };
         }
     }

@@ -12,7 +12,7 @@ namespace FitnessClub.Controllers
         private readonly StatisticsService _statisticsService;
         private readonly ILogger<AdminStatisticsController> _logger;
 
-        public AdminStatisticsController(StatisticsService statisticsService,ILogger<AdminStatisticsController> logger)
+        public AdminStatisticsController(StatisticsService statisticsService, ILogger<AdminStatisticsController> logger)
         {
             _statisticsService = statisticsService;
             _logger = logger;
@@ -49,7 +49,60 @@ namespace FitnessClub.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Ошибка при получении детальной статистики");
-                return BadRequest(new { error = "Не удалось загрузить статистику" });
+                return BadRequest(new
+                {
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
+        }
+
+        [HttpGet("report-preview")]
+        public async Task<IActionResult> GetReportPreview([FromQuery] string type, [FromQuery] DateTime from, [FromQuery] DateTime to)
+        {
+            try
+            {
+                if (from > to)
+                {
+                    return BadRequest(new { error = "Дата 'от' не может быть позже даты 'до'" });
+                }
+
+                var result = await _statisticsService.GetReportPreviewAsync(type, from, to);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при получении предпросмотра отчета {Type}", type);
+                return BadRequest(new
+                {
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
+        }
+
+        [HttpGet("export-excel")]
+        public async Task<IActionResult> ExportExcel([FromQuery] string type, [FromQuery] DateTime from, [FromQuery] DateTime to)
+        {
+            try
+            {
+                if (from > to)
+                {
+                    return BadRequest(new { error = "Дата 'от' не может быть позже даты 'до'" });
+                }
+
+                var file = await _statisticsService.ExportExcelAsync(type, from, to);
+
+                return File(file.Content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", file.FileName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при экспорте Excel {Type}", type);
+                return BadRequest(new
+                {
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
             }
         }
     }

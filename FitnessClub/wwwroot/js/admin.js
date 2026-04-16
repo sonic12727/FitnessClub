@@ -1,21 +1,15 @@
 ﻿
 document.addEventListener('DOMContentLoaded', function ()
 {
-    loadDashboardStats();
-    loadRecentClients();
-    loadTodayVisits();
-    updateDashboardMeta();
     setupEventListeners();
 
     const searchInput = document.getElementById('clientSearch');
-
     if (searchInput)
     {
         searchInput.addEventListener('input', debounce(searchClients, 300));
     }
 
     const navToggle = document.getElementById('navToggle');
-
     if (navToggle)
     {
         navToggle.addEventListener('click', () =>
@@ -23,6 +17,21 @@ document.addEventListener('DOMContentLoaded', function ()
             const navLinks = document.getElementById('navLinks');
             if (navLinks) navLinks.classList.toggle('show');
         });
+    }
+
+    if (document.getElementById('recentClients') || document.getElementById('todayVisitsList'))
+    {
+        loadDashboardStats();
+        loadRecentClients();
+        loadTodayVisits();
+        updateDashboardMeta();
+    }
+
+    const periodSelect = document.getElementById('periodSelect');
+    if (periodSelect)
+    {
+        changePeriod();
+        loadStatistics();
     }
 });
 
@@ -657,4 +666,400 @@ function formatMembershipInfo(membership)
     }
 
     return `<span>${typeName}</span>`;
+}
+
+let attendanceChartInstance = null;
+let membershipChartInstance = null;
+let revenueChartInstance = null;
+let clientsChartInstance = null;
+
+function changePeriod()
+{
+    const period = document.getElementById('periodSelect')?.value;
+    const customPeriod = document.getElementById('customPeriod');
+
+    if (!customPeriod) return;
+
+    customPeriod.style.display = period === 'custom' ? 'flex' : 'none';
+}
+
+function getStatisticsPeriod()
+{
+    const period = document.getElementById('periodSelect')?.value || 'week';
+    const now = new Date();
+
+    const formatDate = (date) =>
+    {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const d = String(date.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+    };
+
+    if (period === 'custom')
+    {
+        const from = document.getElementById('customFrom')?.value;
+        const to = document.getElementById('customTo')?.value;
+
+        if (!from || !to)
+        {
+            throw new Error('Выберите даты для произвольного периода');
+        }
+
+        return { from, to };
+    }
+
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    switch (period)
+    {
+        case 'today':
+            return { from: formatDate(today), to: formatDate(today) };
+
+        case 'yesterday':
+            {
+                const yesterday = new Date(today);
+                yesterday.setDate(yesterday.getDate() - 1);
+                return { from: formatDate(yesterday), to: formatDate(yesterday) };
+            }
+
+        case 'week':
+            {
+                const day = today.getDay();
+                const diff = day === 0 ? 6 : day - 1;
+                const monday = new Date(today);
+                monday.setDate(today.getDate() - diff);
+                return { from: formatDate(monday), to: formatDate(today) };
+            }
+
+        case 'month':
+            {
+                const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+                return { from: formatDate(monthStart), to: formatDate(today) };
+            }
+
+        case 'quarter':
+            {
+                const quarterStartMonth = Math.floor(today.getMonth() / 3) * 3;
+                const quarterStart = new Date(today.getFullYear(), quarterStartMonth, 1);
+                return { from: formatDate(quarterStart), to: formatDate(today) };
+            }
+
+        case 'year':
+            {
+                const yearStart = new Date(today.getFullYear(), 0, 1);
+                return { from: formatDate(yearStart), to: formatDate(today) };
+            }
+
+        default:
+            return { from: formatDate(today), to: formatDate(today) };
+    }
+}
+
+function destroyStatisticsCharts()
+{
+    if (attendanceChartInstance) attendanceChartInstance.destroy();
+    if (membershipChartInstance) membershipChartInstance.destroy();
+    if (revenueChartInstance) revenueChartInstance.destroy();
+    if (clientsChartInstance) clientsChartInstance.destroy();
+}
+
+function renderTopActiveClients(topClients)
+{
+    const body = document.getElementById('topClientsBody');
+    if (!body) return;
+
+    if (!topClients || topClients.length === 0)
+    {
+        body.innerHTML = `
+            <tr>
+                <td colspan="3" class="text-center">Нет данных за выбранный период</td>
+            </tr>
+        `;
+        return;
+    }
+
+    body.innerHTML = topClients.map((client, index) => `
+        <tr>
+            <td>${index + 1}</td>
+            <td>${client.fullName}</td>
+            <td>${client.visitsCount}</td>
+        </tr>
+    `).join('');
+}
+
+function renderStatisticsCharts(data)
+{
+    destroyStatisticsCharts();
+
+    const attendanceCtx = document.getElementById('attendanceChart');
+    const membershipCtx = document.getElementById('membershipChart');
+    const revenueCtx = document.getElementById('revenueChart');
+    const clientsCtx = document.getElementById('clientsChart');
+
+    if (attendanceCtx)
+    {
+        attendanceChartInstance = new Chart(attendanceCtx,
+        {
+            type: 'line',
+            data:
+            {
+                labels: data.attendanceLabels,
+                datasets:
+                [{
+                    label: 'Посещения',
+                    data: data.attendanceData,
+                    tension: 0.3
+                }]
+            },
+            options:
+            {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    }
+
+    if (membershipCtx)
+    {
+        membershipChartInstance = new Chart(membershipCtx,
+        {
+            type: 'doughnut',
+            data:
+            {
+                labels: data.membershipLabels,
+                datasets:
+                [{
+                    data: data.membershipData
+                }]
+            },
+            options:
+            {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    }
+
+    if (revenueCtx)
+    {
+        revenueChartInstance = new Chart(revenueCtx,
+        {
+            type: 'bar',
+            data:
+            {
+                labels: data.revenueLabels,
+                datasets:
+                [{
+                    label: 'Доход',
+                    data: data.revenueData
+                }]
+            },
+            options:
+            {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    }
+
+    if (clientsCtx)
+    {
+        clientsChartInstance = new Chart(clientsCtx,
+        {
+            type: 'bar',
+            data:
+            {
+                labels: data.clientsLabels,
+                datasets:
+                [
+                    {
+                        label: 'Новые клиенты',
+                        data: data.newClientsData
+                    },
+                    {
+                        label: 'Активные клиенты',
+                        data: data.activeClientsData
+                    }
+                ]
+            },
+            options:
+            {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    }
+}
+
+async function loadStatistics()
+{
+    try
+    {
+        const { from, to } = getStatisticsPeriod();
+        const data = await api.get(`/api/admin/statistics/detailed?from=${from}&to=${to}`);
+
+        const totalRevenueEl = document.getElementById('totalRevenue');
+        const totalVisitsEl = document.getElementById('totalVisits');
+        const avgDailyVisitsEl = document.getElementById('avgDailyVisits');
+        const activeClientsEl = document.getElementById('activeClients');
+
+        if (totalRevenueEl) totalRevenueEl.textContent = formatCurrency(data.totalRevenue || 0);
+        if (totalVisitsEl) totalVisitsEl.textContent = data.totalVisits || 0;
+        if (avgDailyVisitsEl) avgDailyVisitsEl.textContent = data.avgDailyVisits || 0;
+        if (activeClientsEl) activeClientsEl.textContent = data.activeClients || 0;
+
+        renderStatisticsCharts(data);
+        renderTopActiveClients(data.topActiveClients || []);
+    }
+    catch (error)
+    {
+        console.error('Ошибка загрузки статистики:', error);
+        showAlert(error.message || 'Не удалось загрузить статистику', 'error');
+    }
+}
+
+async function openReportPreview(type)
+{
+    try
+    {
+        const { from, to } = getStatisticsPeriod();
+        const data = await api.get(`/api/admin/statistics/report-preview?type=${encodeURIComponent(type)}&from=${from}&to=${to}`);
+
+        const titleEl = document.getElementById('reportPreviewTitle');
+        const contentEl = document.getElementById('reportPreviewContent');
+        const modal = document.getElementById('reportPreviewModal');
+
+        if (!titleEl || !contentEl || !modal) return;
+
+        titleEl.textContent = data.title || 'Предпросмотр отчета';
+
+        const rows = data.rows || [];
+
+        if (rows.length === 0)
+        {
+            contentEl.innerHTML = '<p class="text-center">Нет данных за выбранный период</p>';
+        }
+        else
+        {
+            const headers = Object.keys(rows[0]);
+
+            let html = '<div style="overflow-x:auto;"><table class="table"><thead><tr>';
+            headers.forEach(h =>
+            {
+                html += `<th>${h}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+
+            rows.forEach(row =>
+            {
+                html += '<tr>';
+                headers.forEach(h =>
+                {
+                    html += `<td>${row[h] ?? '—'}</td>`;
+                });
+                html += '</tr>';
+            });
+
+            html += '</tbody></table></div>';
+            contentEl.innerHTML = html;
+        }
+
+        modal.style.display = 'flex';
+    }
+    catch (error)
+    {
+        showAlert(error.message || 'Не удалось загрузить предпросмотр', 'error');
+    }
+}
+
+function downloadExcel(type)
+{
+    try 
+    {
+        const { from, to } = getStatisticsPeriod();
+        const token = localStorage.getItem('token');
+
+        const url = `${API_BASE}/api/admin/statistics/export-excel?type=${encodeURIComponent(type)}&from=${from}&to=${to}`;
+
+        fetch(url,
+        {
+            method: 'GET',
+            headers:
+            {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then(async response =>
+            {
+                if (!response.ok)
+                {
+                    const text = await response.text();
+                    throw new Error(text || 'Ошибка скачивания Excel');
+                }
+
+                return Promise.all([response.blob(), response.headers.get('content-disposition')]);
+            })
+            .then(([blob, contentDisposition]) =>
+            {
+                let fileName = `statistics-${type}.xlsx`;
+
+                const match = contentDisposition && contentDisposition.match(/filename="?([^"]+)"?/);
+                if (match && match[1])
+                {
+                    fileName = match[1];
+                }
+
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                URL.revokeObjectURL(link.href);
+            })
+            .catch(error =>
+            {
+                showAlert(error.message || 'Не удалось скачать Excel', 'error');
+            });
+    }
+    catch (error)
+    {
+        showAlert(error.message || 'Не удалось скачать Excel', 'error');
+    }
+}
+
+function exportToExcel()
+{
+    downloadExcel('summary');
+}
+
+function generateAttendanceReport()
+{
+    openReportPreview('attendance');
+}
+
+function exportAttendanceReport()
+{
+    downloadExcel('attendance');
+}
+
+function generateFinancialReport()
+{
+    openReportPreview('financial');
+}
+
+function exportFinancialReport()
+{
+    downloadExcel('financial');
+}
+
+function generateClientsReport()
+{
+    openReportPreview('clients');
+}
+
+function exportClientsReport()
+{
+    downloadExcel('clients');
 }

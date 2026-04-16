@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using FitnessClub.Core.Requests;
+using FitnessClub.Core.Utils;
 
 namespace FitnessClub.Controllers
 {
@@ -74,8 +75,8 @@ namespace FitnessClub.Controllers
             try
             {
                 var clients = await _clientService.SearchClientsAsync(search);
-                var localToday = DateTime.Now.Date;
-                var localTomorrow = localToday.AddDays(1);
+                var localToday = ClubTimeHelper.GetLocalToday();
+                var (todayStartUtc, todayEndUtc) = ClubTimeHelper.GetUtcBoundsForLocalDay(localToday);
 
                 return Ok(clients.Select(c => new
                 {
@@ -85,7 +86,7 @@ namespace FitnessClub.Controllers
                     c.Email,
                     c.Phone,
                     c.CreatedAt,
-                    HasVisitedToday = c.Attendances.Any(a => a.CheckInTime >= localToday && a.CheckInTime < localTomorrow),
+                    HasVisitedToday = c.Attendances.Any(a => a.CheckInTime >= todayStartUtc && a.CheckInTime < todayEndUtc),
                     Membership = c.Membership == null ? null : new
                     {
                         c.Membership.Type,
