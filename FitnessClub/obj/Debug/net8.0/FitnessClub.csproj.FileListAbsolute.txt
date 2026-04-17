@@ -1,3 +1,4 @@
+C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\wwwroot\admin\dashboard.html
 C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\appsettings.json
 C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\FitnessClub.staticwebassets.runtime.json
@@ -8,6 +9,11 @@ C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\FitnessClub.
 C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\FitnessClub.dll
 C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\FitnessClub.pdb
 C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\BCrypt.Net-Next.dll
+C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\ClosedXML.dll
+C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\ClosedXML.Parser.dll
+C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\DocumentFormat.OpenXml.dll
+C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\DocumentFormat.OpenXml.Framework.dll
+C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\ExcelNumberFormat.dll
 C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\Humanizer.dll
 C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\Microsoft.Bcl.AsyncInterfaces.dll
@@ -30,6 +36,10 @@ C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\Microsoft.Id
 C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\Microsoft.OpenApi.dll
 C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\Mono.TextTemplating.dll
+C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\Npgsql.dll
+C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\RBush.dll
+C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\SixLabors.Fonts.dll
 C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\SQLitePCLRaw.batteries_v2.dll
 C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\SQLitePCLRaw.core.dll
 C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\SQLitePCLRaw.provider.e_sqlite3.dll
@@ -43,6 +53,7 @@ C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\System.Compo
 C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\System.Composition.Runtime.dll
 C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\System.Composition.TypedParts.dll
 C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\System.IO.Packaging.dll
 C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\cs\Microsoft.CodeAnalysis.resources.dll
 C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\de\Microsoft.CodeAnalysis.resources.dll
 C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\es\Microsoft.CodeAnalysis.resources.dll
@@ -123,6 +134,7 @@ C:\Users\user\source\repos\FitnessClub\FitnessClub\obj\Debug\net8.0\FitnessClub.
 C:\Users\user\source\repos\FitnessClub\FitnessClub\obj\Debug\net8.0\FitnessClub.csproj.CoreCompileInputs.cache
 C:\Users\user\source\repos\FitnessClub\FitnessClub\obj\Debug\net8.0\FitnessClub.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\user\source\repos\FitnessClub\FitnessClub\obj\Debug\net8.0\FitnessClub.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\user\source\repos\FitnessClub\FitnessClub\obj\Debug\net8.0\FitnessClub.sourcelink.json
 C:\Users\user\source\repos\FitnessClub\FitnessClub\obj\Debug\net8.0\rjimswa.dswa.cache.json
 C:\Users\user\source\repos\FitnessClub\FitnessClub\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
 C:\Users\user\source\repos\FitnessClub\FitnessClub\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
@@ -131,22 +143,10 @@ C:\Users\user\source\repos\FitnessClub\FitnessClub\obj\Debug\net8.0\staticwebass
 C:\Users\user\source\repos\FitnessClub\FitnessClub\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\Users\user\source\repos\FitnessClub\FitnessClub\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\user\source\repos\FitnessClub\FitnessClub\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-C:\Users\user\source\repos\FitnessClub\FitnessClub\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\user\source\repos\FitnessClub\FitnessClub\obj\Debug\net8.0\FitnessC.F573882F.Up2Date
 C:\Users\user\source\repos\FitnessClub\FitnessClub\obj\Debug\net8.0\FitnessClub.dll
 C:\Users\user\source\repos\FitnessClub\FitnessClub\obj\Debug\net8.0\refint\FitnessClub.dll
 C:\Users\user\source\repos\FitnessClub\FitnessClub\obj\Debug\net8.0\FitnessClub.pdb
 C:\Users\user\source\repos\FitnessClub\FitnessClub\obj\Debug\net8.0\FitnessClub.genruntimeconfig.cache
 C:\Users\user\source\repos\FitnessClub\FitnessClub\obj\Debug\net8.0\ref\FitnessClub.dll
-C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\wwwroot\admin\dashboard.html
-C:\Users\user\source\repos\FitnessClub\FitnessClub\obj\Debug\net8.0\FitnessClub.sourcelink.json
-C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\Npgsql.dll
-C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
-C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\ClosedXML.dll
-C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\ClosedXML.Parser.dll
-C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\DocumentFormat.OpenXml.dll
-C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\DocumentFormat.OpenXml.Framework.dll
-C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\ExcelNumberFormat.dll
-C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\RBush.dll
-C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\SixLabors.Fonts.dll
-C:\Users\user\source\repos\FitnessClub\FitnessClub\bin\Debug\net8.0\System.IO.Packaging.dll
+C:\Users\user\source\repos\FitnessClub\FitnessClub\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

@@ -49,6 +49,28 @@ document.addEventListener('DOMContentLoaded', function ()
     }
 });
 
+function getMembershipTypeName(type)
+{
+    const types =
+    {
+        'OneTime': 'Разовое посещение',
+        'Visits8': '8 посещений',
+        'Visits12': '12 посещений',
+        'Monthly': 'Месячный',
+        'Quarterly': 'Квартальный',
+        'Yearly': 'Годовой',
+
+        1: 'Разовое посещение',
+        2: '8 посещений',
+        3: '12 посещений',
+        4: 'Месячный',
+        5: 'Квартальный',
+        6: 'Годовой'
+    };
+
+    return types[type] || '—';
+}
+
 async function loadProfileData()
 {
     try
@@ -60,7 +82,7 @@ async function loadProfileData()
         ]);
 
         // Профиль
-        document.getElementById('userName').textContent = `${profileResponse.firstName} ${profileResponse.lastName}`;
+        document.getElementById('userName').textContent =`${profileResponse.firstName || ''} ${profileResponse.lastName || ''}`.trim();
         document.getElementById('userEmail').textContent = profileResponse.email && profileResponse.email.trim() !== '' ? profileResponse.email : '—';
 
         document.getElementById('totalVisits').textContent = profileResponse.totalVisits ?? 0;
@@ -83,8 +105,7 @@ async function loadProfileData()
                 const startDate = new Date(membershipResponse.membership.startDate).toLocaleDateString('ru-RU');
                 const endDate = new Date(membershipResponse.membership.endDate).toLocaleDateString('ru-RU');
 
-                membershipContainer.innerHTML =
-                `
+                membershipContainer.innerHTML =`
                     <div class="membership-card">
                         <h3>Мой абонемент</h3>
                         <div class="membership-details">
@@ -99,8 +120,7 @@ async function loadProfileData()
             }
             else if (isVisitBased)
             {
-                membershipContainer.innerHTML =
-                `
+                membershipContainer.innerHTML =`
                     <div class="membership-card">
                         <h3>Мой абонемент</h3>
                         <div class="membership-details">
@@ -114,8 +134,7 @@ async function loadProfileData()
             }
             else
             {
-                membershipContainer.innerHTML =
-                `
+                membershipContainer.innerHTML =`
                     <div class="membership-card">
                         <h3>Мой абонемент</h3>
                         <div class="membership-details">
@@ -128,8 +147,7 @@ async function loadProfileData()
         }
         else
         {
-            membershipContainer.innerHTML = 
-            `
+            membershipContainer.innerHTML =`
                 <div class="membership-card">
                     <h3>Мой абонемент</h3>
                     <p class="no-membership">У вас нет активного абонемента</p>

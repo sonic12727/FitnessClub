@@ -19,6 +19,7 @@ builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<ClientService>();
 builder.Services.AddScoped<MembershipService>();
 builder.Services.AddScoped<StatisticsService>();
+builder.Services.AddScoped<CallbackService>();
 
 // Контроллеры
 builder.Services.AddControllers()
@@ -29,8 +30,7 @@ builder.Services.AddControllers()
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll",
-        policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+    options.AddPolicy("AllowAll", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 });
 
 // JWT

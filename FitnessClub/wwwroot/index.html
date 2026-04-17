@@ -35,6 +35,9 @@
             <h1>Добро пожаловать в фитнес-клуб "Сила"</h1>
             <p>Современное оборудование, профессиональные тренеры и комфортная атмосфера</p>
             <div class="hero-buttons">
+                <button type="button" id="openCallbackModalBtn" class="btn btn-callback">
+                    Заказать перезвон
+                </button>
                 <a href="/login.html" class="btn btn-primary">Войти в систему</a>
                 <a href="#features" class="btn btn-secondary">Узнать больше</a>
             </div>
@@ -76,13 +79,43 @@
             </div>
         </section>
 
-        <section class="system-status">
-            <h2>Статус системы</h2>
-            <div id="systemStatus" class="status-loading">
-                <p>Проверка подключения к серверу...</p>
+        <section class="callback-cta">
+            <div class="callback-cta__content">
+                <h2>Хотите узнать подробнее о клубе и абонементах?</h2>
+                <p>Оставьте имя и телефон — менеджер перезвонит и поможет подобрать подходящий вариант.</p>
+                <button type="button" class="btn btn-callback btn-callback-lg" onclick="openCallbackModal()">
+                    Заказать перезвон
+                </button>
             </div>
         </section>
     </main>
+
+    <div id="callbackModal" class="modal">
+        <div class="modal-content callback-modal">
+            <span class="close-modal" onclick="closeCallbackModal()">&times;</span>
+            <h3>Заказать перезвон менеджера</h3>
+            <p class="callback-modal__subtitle">
+                Оставьте ваши данные, и мы свяжемся с вами в ближайшее время.
+            </p>
+
+            <form id="callbackForm">
+                <div class="form-group">
+                    <label for="callbackName">Имя *</label>
+                    <input type="text" id="callbackName" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="callbackPhone">Телефон *</label>
+                    <input type="text" id="callbackPhone" class="form-control" required>
+                </div>
+
+                <div class="modal-buttons">
+                    <button type="submit" class="btn btn-primary">Отправить</button>
+                    <button type="button" class="btn btn-secondary callback-cancel-btn" onclick="closeCallbackModal()">Отмена</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <footer class="footer">
         <p>Фитнес-клуб "Сила" &copy; 2026. Система управления клубом.</p>
@@ -90,5 +123,6 @@
     </footer>
     <script src="/js/utils.js"></script>
     <script src="/js/auth.js"></script>
+    <script src="/js/home.js"></script>
 </body>
 </html>

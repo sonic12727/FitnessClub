@@ -18,6 +18,56 @@ body {
     padding: 0 20px;
 }
 
+/* Утилиты */
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-muted {
+    color: #666;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+}
+
+.btn-lg {
+    padding: 15px 30px;
+    font-size: 1.1rem;
+}
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.status-active {
+    color: #2e7d32;
+    font-weight: 600;
+}
+
+.status-inactive {
+    color: #c62828;
+    font-weight: 600;
+}
+
+.status-expired {
+    color: #ef6c00;
+    font-weight: 600;
+}
+
+.status-pending {
+    color: #1565c0;
+    font-weight: 600;
+}
+
 /* Навигация */
 .navbar {
     background: linear-gradient(135deg, #1a2980, #26d0ce);
@@ -149,6 +199,65 @@ body {
     color: white;
 }
 
+/* CTA перезвона */
+.btn-callback {
+    background: linear-gradient(135deg, #ff9800, #ff6f00);
+    color: white;
+    font-weight: 700;
+    box-shadow: 0 8px 20px rgba(255, 111, 0, 0.28);
+}
+
+    .btn-callback:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 24px rgba(255, 111, 0, 0.35);
+    }
+
+.btn-callback-lg {
+    padding: 15px 34px;
+    font-size: 1.05rem;
+}
+
+.callback-cta {
+    margin: 10px 0 50px;
+}
+
+.callback-cta__content {
+    background: linear-gradient(135deg, #1a2980, #26d0ce);
+    color: white;
+    padding: 40px 30px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+}
+
+    .callback-cta__content h2 {
+        margin-bottom: 12px;
+        font-size: 2rem;
+    }
+
+    .callback-cta__content p {
+        max-width: 720px;
+        margin: 0 auto 24px;
+        opacity: 0.95;
+        font-size: 1.05rem;
+    }
+
+.callback-modal h3 {
+    color: #1a2980;
+    margin-bottom: 10px;
+}
+
+.callback-modal__subtitle {
+    margin-bottom: 22px;
+    color: #666;
+}
+
+.btn.callback-cancel-btn {
+    color: #333;
+    background: #eef1f5;
+    backdrop-filter: none;
+}
+
 /* Карточки */
 .features {
     padding: 80px 0;
@@ -196,7 +305,9 @@ body {
     padding: 40px 0;
 }
 
-.status-loading, .status-success, .status-error {
+.status-loading,
+.status-success,
+.status-error {
     background: white;
     padding: 20px;
     border-radius: 10px;
@@ -214,7 +325,8 @@ body {
     border-left: 5px solid #f44336;
 }
 
-    .status-success i, .status-error i {
+    .status-success i,
+    .status-error i {
         font-size: 2rem;
     }
 
@@ -227,7 +339,9 @@ body {
 }
 
 /* Формы */
-.login-form, .register-form, .admin-form {
+.login-form,
+.register-form,
+.admin-form {
     max-width: 500px;
     margin: 50px auto;
     background: white;
@@ -261,6 +375,16 @@ body {
         border-color: #26d0ce;
     }
 
+.form-inline {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+    .form-inline .form-control {
+        flex: 1;
+    }
+
 /* Админ-панель */
 .admin-panel {
     padding: 40px 20px;
@@ -288,13 +412,15 @@ body {
         gap: 10px;
     }
 
+/* Таблицы */
 .table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
 }
 
-    .table th, .table td {
+    .table th,
+    .table td {
         padding: 12px;
         text-align: left;
         border-bottom: 1px solid #e0e0e0;
@@ -309,6 +435,60 @@ body {
     .table tr:hover {
         background-color: #f8f9fa;
     }
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f5f7fa;
+}
+
+.table-striped tbody tr:nth-child(odd) {
+    background-color: #f8f9fa;
+}
+
+/* Карточки-утилиты */
+.card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.card-header {
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+    font-weight: 600;
+    color: #1a2980;
+}
+
+.card-body {
+    padding: 10px 0;
+}
+
+/* Загрузка */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #1a2980;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
 
 /* Алерты */
 .alert {
@@ -410,6 +590,53 @@ body {
         opacity: 1;
     }
 
+/* Модальные окна */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 40px;
+    border-radius: 14px;
+    max-width: 520px;
+    width: 90%;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.18);
+}
+
+.close-modal {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    font-size: 1.6rem;
+    cursor: pointer;
+    color: #666;
+    background: none;
+    border: none;
+    padding: 4px 8px;
+    line-height: 1;
+}
+
+    .close-modal:hover {
+        color: #333;
+    }
+
+.modal-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+    justify-content: flex-end;
+}
+
 /* Футер */
 .footer {
     background: #1a2980;
@@ -423,6 +650,49 @@ body {
     margin-top: 10px;
     font-size: 0.9rem;
     opacity: 0.8;
+}
+
+/* Кнопка перехода в дашборд */
+.admin-dashboard-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.22);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+}
+
+    .admin-dashboard-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 12px 24px rgba(37, 99, 235, 0.28);
+    }
+
+    .admin-dashboard-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 6px 14px rgba(37, 99, 235, 0.2);
+    }
+
+    .admin-dashboard-btn:focus-visible {
+        outline: 3px solid rgba(37, 99, 235, 0.35);
+        outline-offset: 3px;
+    }
+
+.admin-dashboard-btn__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    font-size: 16px;
 }
 
 /* Адаптивность */
@@ -458,257 +728,37 @@ body {
         grid-template-columns: 1fr;
     }
 
-    /* Модальные окна */
-    .modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.5);
-        z-index: 1000;
-        align-items: center;
-        justify-content: center;
-    }
-
     .modal-content {
-        background: white;
-        padding: 40px;
-        border-radius: 10px;
-        max-width: 500px;
-        width: 90%;
-        position: relative;
-        max-height: 90vh;
-        overflow-y: auto;
+        padding: 24px;
+        width: 95%;
     }
 
-    .close-modal {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        font-size: 1.5rem;
-        cursor: pointer;
-        color: #666;
-        background: none;
-        border: none;
-        padding: 5px;
+    .callback-cta__content {
+        padding: 28px 20px;
     }
 
-        .close-modal:hover {
-            color: #333;
+        .callback-cta__content h2 {
+            font-size: 1.5rem;
         }
 
-    .modal-buttons {
-        display: flex;
-        gap: 15px;
-        margin-top: 20px;
-        justify-content: flex-end;
+    .table th,
+    .table td {
+        padding: 8px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .btn {
+        padding: 10px 15px;
+        font-size: 0.9rem;
     }
 
-    /* Статусы */
-    .status-badge {
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 600;
+    .hero-content h1 {
+        font-size: 1.8rem;
     }
 
-    .status-active {
-        background: #e8f5e9;
-        color: #2e7d32;
-    }
-
-    .status-inactive {
-        background: #ffebee;
-        color: #c62828;
-    }
-
-    .status-expired {
-        background: #fff3e0;
-        color: #ef6c00;
-    }
-
-    .status-pending {
-        background: #e3f2fd;
-        color: #1565c0;
-    }
-
-    
-
-    /* Кнопки */
-    .btn-sm {
-        padding: 6px 12px;
-        font-size: 0.85rem;
-    }
-
-    .btn-lg {
-        padding: 15px 30px;
-        font-size: 1.1rem;
-    }
-
-    /* Текстовые классы */
-    .text-center {
-        text-align: center;
-    }
-
-    .text-right {
-        text-align: right;
-    }
-
-    .text-muted {
-        color: #666;
-    }
-
-    /* Таблицы */
-    .table-responsive {
-        overflow-x: auto;
-    }
-
-    .table-hover tbody tr:hover {
-        background-color: #f5f7fa;
-    }
-
-    .table-striped tbody tr:nth-child(odd) {
-        background-color: #f8f9fa;
-    }
-
-    /* Формы */
-    .form-inline {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-    }
-
-        .form-inline .form-control {
-            flex: 1;
-        }
-
-    /* Карточки */
-    .card {
-        background: white;
-        border-radius: 10px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    .feature-card {
         padding: 20px;
-        margin-bottom: 20px;
     }
-
-    .card-header {
-        border-bottom: 2px solid #f0f0f0;
-        padding-bottom: 15px;
-        margin-bottom: 15px;
-        font-weight: 600;
-        color: #1a2980;
-    }
-
-    .card-body {
-        padding: 10px 0;
-    }
-
-    /* Загрузка */
-    .loading {
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        border: 3px solid #f3f3f3;
-        border-top: 3px solid #1a2980;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-        0% {
-            transform: rotate(0deg);
-        }
-
-        100% {
-            transform: rotate(360deg);
-        }
-    }
-
-    /* Адаптивность для мобильных */
-    @media (max-width: 768px) {
-        .modal-content {
-            padding: 20px;
-            width: 95%;
-        }
-
-        .alert {
-            min-width: 250px;
-            max-width: 300px;
-            left: 50%;
-            transform: translateX(-50%) translateY(-100%);
-        }
-
-            .alert.show {
-                transform: translateX(-50%) translateY(0);
-            }
-
-        .table th, .table td {
-            padding: 8px;
-            font-size: 0.9rem;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .btn {
-            padding: 10px 15px;
-            font-size: 0.9rem;
-        }
-
-        .hero-content h1 {
-            font-size: 1.8rem;
-        }
-
-        .feature-card {
-            padding: 20px;
-        }
-    }
-}
-
-.admin-dashboard-btn 
-{
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 12px 18px;
-    border: none;
-    border-radius: 12px;
-    background: linear-gradient(135deg, #2563eb, #1d4ed8);
-    color: #ffffff;
-    font-size: 15px;
-    font-weight: 600;
-    line-height: 1;
-    cursor: pointer;
-    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.22);
-    transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
-}
-
-    .admin-dashboard-btn:hover 
-    {
-        transform: translateY(-1px);
-        box-shadow: 0 12px 24px rgba(37, 99, 235, 0.28);
-    }
-
-    .admin-dashboard-btn:active 
-    {
-        transform: translateY(0);
-        box-shadow: 0 6px 14px rgba(37, 99, 235, 0.2);
-    }
-
-    .admin-dashboard-btn:focus-visible 
-    {
-        outline: 3px solid rgba(37, 99, 235, 0.35);
-        outline-offset: 3px;
-    }
-
-.admin-dashboard-btn__icon 
-{
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 22px;
-    height: 22px;
-    font-size: 16px;
 }

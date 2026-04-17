@@ -2,6 +2,7 @@
 document.addEventListener('DOMContentLoaded', function ()
 {
     setupEventListeners();
+    loadCallbackRequests();
 
     const searchInput = document.getElementById('clientSearch');
     if (searchInput)
@@ -35,11 +36,18 @@ document.addEventListener('DOMContentLoaded', function ()
     }
 });
 
+let attendanceChartInstance = null;
+let membershipChartInstance = null;
+let revenueChartInstance = null;
+let clientsChartInstance = null;
+let pendingCallbackId = null;
+
 async function refreshDashboard()
 {
     await loadDashboardStats();
     await loadRecentClients();
     await loadTodayVisits();
+    await loadCallbackRequests();
     updateDashboardMeta();
 }
 
@@ -668,10 +676,7 @@ function formatMembershipInfo(membership)
     return `<span>${typeName}</span>`;
 }
 
-let attendanceChartInstance = null;
-let membershipChartInstance = null;
-let revenueChartInstance = null;
-let clientsChartInstance = null;
+
 
 function changePeriod()
 {
@@ -1062,4 +1067,138 @@ function generateClientsReport()
 function exportClientsReport()
 {
     downloadExcel('clients');
+}
+
+async function loadCallbackRequests()
+{
+    try
+    {
+        const response = await api.get('/api/admin/callbacks/recent');
+        const container = document.getElementById('callbackRequestsList');
+
+        if (!container) return;
+
+        if (!Array.isArray(response) || response.length === 0)
+        {
+            container.innerHTML = `
+                <tr>
+                    <td colspan="4" class="text-center">Новых заявок нет</td>
+                </tr>
+            `;
+            return;
+        }
+
+        let html = '';
+
+        response.forEach(item =>
+        {
+            const createdAt = item.createdAt
+                ? new Date(item.createdAt).toLocaleString('ru-RU')
+                : '—';
+
+            html += `
+                <tr>
+                    <td><a href="tel:${item.phone}">${item.phone}</a></td>
+                    <td>${item.name || '—'}</td>
+                    <td>${createdAt}</td>
+                    <td>
+                        <button class="btn btn-sm btn-success" onclick="openCallbackConfirmModal(${item.id}, '${(item.name || '').replace(/'/g, "\\'")}')">
+                            Обработано
+                         </button>
+                    </td>
+                </tr>
+            `;
+        });
+
+        container.innerHTML = html;
+    }
+    catch (error)
+    {
+        console.error('Ошибка загрузки заявок на перезвон:', error);
+
+        const container = document.getElementById('callbackRequestsList');
+        if (container)
+        {
+            container.innerHTML = `
+                <tr>
+                    <td colspan="4" class="text-center text-muted">
+                        Не удалось загрузить заявки
+                    </td>
+                </tr>
+            `;
+        }
+    }
+}
+
+async function markCallbackProcessed(callbackId)
+{
+    try
+    {
+        await api.put(`/api/admin/callbacks/${callbackId}/processed`, {});
+        showAlert('Заявка отмечена как обработанная', 'success');
+        loadCallbackRequests();
+    }
+    catch (error)
+    {
+        showAlert(error.message || 'Не удалось обновить заявку', 'error');
+    }
+}
+
+function openCallbackConfirmModal(callbackId, clientName = '')
+{
+    pendingCallbackId = callbackId;
+
+    const textEl = document.getElementById('callbackConfirmText');
+    if (textEl)
+    {
+        textEl.textContent = clientName ? `Вы уверены, что заявка от клиента ${clientName} уже обработана?` : 'Вы уверены в обработке заявки?';
+    }
+
+    const modal = document.getElementById('callbackConfirmModal');
+    if (modal) modal.style.display = 'flex';
+}
+
+async function confirmCallbackProcessed()
+{
+    if (!pendingCallbackId) return;
+
+    try
+    {
+        await api.put(`/api/admin/callbacks/${pendingCallbackId}/processed`, {});
+        showAlert('Заявка отмечена как обработанная', 'success');
+
+        closeCallbackConfirmModal();
+        loadCallbackRequests();
+    }
+    catch (error)
+    {
+        showAlert(error.message || 'Не удалось обновить заявку', 'error');
+    }
+}
+
+function closeCallbackConfirmModal()
+{
+    pendingCallbackId = null;
+
+    const modal = document.getElementById('callbackConfirmModal');
+    if (modal) modal.style.display = 'none';
+}
+
+function closeModal(modalId)
+{
+    const modal = document.getElementById(modalId);
+    if (!modal) return;
+
+    if (modalId === 'addMembershipModal')
+    {
+        modal.remove();
+        return;
+    }
+
+    if (modalId === 'callbackConfirmModal')
+    {
+        pendingCallbackId = null;
+    }
+
+    modal.style.display = 'none';
 }

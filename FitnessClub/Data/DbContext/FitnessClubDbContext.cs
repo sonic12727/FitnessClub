@@ -13,6 +13,7 @@ namespace FitnessClub.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Membership> Memberships { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
+        public DbSet<Callback> Callbacks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -39,6 +40,7 @@ namespace FitnessClub.Data
                 entity.HasOne(m => m.User).WithOne(u => u.Membership).HasForeignKey<Membership>(m => m.UserId);
             });
 
+            // Attendance
             modelBuilder.Entity<Attendance>(entity =>
             {
                 entity.HasKey(a => a.Id);
@@ -46,6 +48,16 @@ namespace FitnessClub.Data
 
                 // User может иметь много Attedances
                 entity.HasOne(a => a.User).WithMany(u => u.Attendances).HasForeignKey(a => a.UserId);
+            });
+
+            // Callback
+            modelBuilder.Entity<Callback>(entity =>
+            {
+                entity.HasKey(x => x.Id);
+                entity.Property(x => x.Name).IsRequired().HasMaxLength(100);
+                entity.Property(x => x.Phone).IsRequired();
+                entity.Property(x => x.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+                entity.Property(x => x.IsProcessed).HasDefaultValue(false);
             });
         }
     }

@@ -63,6 +63,32 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "FitnessClub.Controllers.AdminCallbacksController",
+    "Method": "MarkProcessed",
+    "RelativePath": "api/admin/callbacks/{id}/processed",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FitnessClub.Controllers.AdminCallbacksController",
+    "Method": "GetRecent",
+    "RelativePath": "api/admin/callbacks/recent",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "FitnessClub.Controllers.AdminClientsController",
     "Method": "CreateClient",
     "RelativePath": "api/admin/clients",
@@ -290,6 +316,22 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FitnessClub.Controllers.PublicCallbacksController",
+    "Method": "Create",
+    "RelativePath": "api/public/callbacks",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "FitnessClub.Core.Requests.CreateCallbackRequest",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   }
 ]
